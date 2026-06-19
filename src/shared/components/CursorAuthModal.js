@@ -34,10 +34,10 @@ export default function CursorAuthModal({ isOpen, onSuccess, onClose }) {
       } else if (data.windowsManual) {
         setWindowsManual(true);
       } else {
-        setError(data.error || "Could not auto-detect tokens");
+        setError(data.error || "无法自动检测 Token");
       }
     } catch (err) {
-      setError("Failed to auto-detect tokens");
+      setError("自动检测 Token 失败");
     } finally {
       setAutoDetecting(false);
     }
@@ -51,12 +51,12 @@ export default function CursorAuthModal({ isOpen, onSuccess, onClose }) {
 
   const handleImportToken = async () => {
     if (!accessToken.trim()) {
-      setError("Please enter an access token");
+      setError("请输入 access token");
       return;
     }
 
     if (!machineId.trim()) {
-      setError("Please enter a machine ID");
+      setError("请输入 machine ID");
       return;
     }
 
@@ -76,10 +76,10 @@ export default function CursorAuthModal({ isOpen, onSuccess, onClose }) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Import failed");
+        throw new Error(data.error || "导入失败");
       }
 
-      onSuccess?.();
+      onSuccess();
       onClose();
     } catch (err) {
       setError(err.message);
@@ -89,7 +89,7 @@ export default function CursorAuthModal({ isOpen, onSuccess, onClose }) {
   };
 
   return (
-    <Modal isOpen={isOpen} title="Connect Cursor IDE" onClose={onClose}>
+    <Modal isOpen={isOpen} title="连接 Cursor" onClose={onClose} size="lg">
       <div className="flex flex-col gap-4">
         {/* Auto-detecting state */}
         {autoDetecting && (
@@ -99,9 +99,9 @@ export default function CursorAuthModal({ isOpen, onSuccess, onClose }) {
                 progress_activity
               </span>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Auto-detecting tokens...</h3>
+            <h3 className="text-lg font-semibold mb-2">自动检测 token 中...</h3>
             <p className="text-sm text-text-muted">
-              Reading from Cursor IDE database
+              正在读取 Cursor 存储
             </p>
           </div>
         )}
@@ -115,7 +115,7 @@ export default function CursorAuthModal({ isOpen, onSuccess, onClose }) {
                 <div className="flex gap-2">
                   <span className="material-symbols-outlined text-green-600 dark:text-green-400">check_circle</span>
                   <p className="text-sm text-green-800 dark:text-green-200">
-                    Tokens auto-detected from Cursor IDE successfully!
+                    成功从 Cursor IDE 自动检测到 Token！
                   </p>
                 </div>
               </div>
@@ -127,14 +127,14 @@ export default function CursorAuthModal({ isOpen, onSuccess, onClose }) {
                 <div className="flex gap-2 items-center">
                   <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">info</span>
                   <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-                    Could not read Cursor database automatically.
+                    无法自动读取 Cursor 数据库。
                   </p>
                 </div>
                 <p className="text-xs text-amber-700 dark:text-amber-300">
-                  Make sure Cursor IDE has been opened at least once, then click <strong>Retry</strong>. If the problem persists, paste your tokens manually below.
+                  请确保至少打开过一次 Cursor IDE，然后点击 <strong>重试</strong>。如果问题仍然存在，请在下方手动粘贴你的 token。
                 </p>
                 <Button onClick={runAutoDetect} variant="outline" fullWidth>
-                  Retry
+                  重试
                 </Button>
               </div>
             )}
@@ -145,7 +145,7 @@ export default function CursorAuthModal({ isOpen, onSuccess, onClose }) {
                 <div className="flex gap-2">
                   <span className="material-symbols-outlined text-blue-600 dark:text-blue-400">info</span>
                   <p className="text-sm text-blue-800 dark:text-blue-200">
-                    Cursor IDE not detected. Please paste your tokens manually.
+                    未检测到 Cursor IDE。请手动粘贴你的 token。
                   </p>
                 </div>
               </div>
@@ -159,10 +159,13 @@ export default function CursorAuthModal({ isOpen, onSuccess, onClose }) {
               <textarea
                 value={accessToken}
                 onChange={(e) => setAccessToken(e.target.value)}
-                placeholder="Access token will be auto-filled..."
+                placeholder="Token 将自动填充..."
                 rows={3}
                 className="w-full px-3 py-2 text-sm font-mono border border-border rounded-lg bg-background focus:outline-none focus:border-primary resize-none"
               />
+              <p className="text-xs text-text-muted mt-1">
+                来自 Cursor IDE 的 access token
+              </p>
             </div>
 
             {/* Machine ID Input */}
@@ -173,9 +176,12 @@ export default function CursorAuthModal({ isOpen, onSuccess, onClose }) {
               <Input
                 value={machineId}
                 onChange={(e) => setMachineId(e.target.value)}
-                placeholder="Machine ID will be auto-filled..."
+                placeholder="Token 将自动填充..."
                 className="font-mono text-sm"
               />
+              <p className="text-xs text-text-muted mt-1">
+                来自 Cursor IDE 的 machine ID
+              </p>
             </div>
 
             {/* Error Display */}
@@ -192,10 +198,10 @@ export default function CursorAuthModal({ isOpen, onSuccess, onClose }) {
                 fullWidth
                 disabled={importing || !accessToken.trim() || !machineId.trim()}
               >
-                {importing ? "Importing..." : "Import Token"}
+                {importing ? "导入中..." : "导入 Token"}
               </Button>
               <Button onClick={onClose} variant="ghost" fullWidth>
-                Cancel
+                取消
               </Button>
             </div>
           </>

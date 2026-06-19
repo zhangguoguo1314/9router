@@ -15,27 +15,27 @@ import NineRemotePromoModal from "./NineRemotePromoModal";
 // const VISIBLE_MEDIA_KINDS = ["embedding", "image", "imageToText", "tts", "stt", "webSearch", "webFetch", "video", "music"];
 const VISIBLE_MEDIA_KINDS = ["embedding", "image", "tts", "stt"];
 // Combined entry: webSearch + webFetch share one page at /dashboard/media-providers/web
-const COMBINED_WEB_ITEM = { id: "web", label: "Web Fetch & Search", icon: "travel_explore", href: "/dashboard/media-providers/web" };
+const COMBINED_WEB_ITEM = { id: "web", label: "网页抓取与搜索", icon: "travel_explore", href: "/dashboard/media-providers/web" };
 
 const navItems = [
-  { href: "/dashboard/endpoint", label: "Endpoint", icon: "api" },
-  { href: "/dashboard/providers", label: "Providers", icon: "dns" },
+  { href: "/dashboard/endpoint", label: "端点", icon: "api" },
+  { href: "/dashboard/providers", label: "提供商", icon: "dns" },
   // { href: "/dashboard/basic-chat", label: "Basic Chat", icon: "chat" }, // Hidden
-  { href: "/dashboard/combos", label: "Combos", icon: "layers" },
-  { href: "/dashboard/usage", label: "Usage", icon: "bar_chart" },
-  { href: "/dashboard/quota", label: "Quota Tracker", icon: "data_usage" },
-  { href: "/dashboard/mitm", label: "MITM", icon: "security" },
-  { href: "/dashboard/cli-tools", label: "CLI Tools", icon: "terminal" },
+  { href: "/dashboard/combos", label: "组合", icon: "layers" },
+  { href: "/dashboard/usage", label: "用量", icon: "bar_chart" },
+  { href: "/dashboard/quota", label: "额度追踪", icon: "data_usage" },
+  { href: "/dashboard/mitm", label: "中间人代理", icon: "security" },
+  { href: "/dashboard/cli-tools", label: "CLI 工具", icon: "terminal" },
 ];
 
 const debugItems = [
-  { href: "/dashboard/console-log", label: "Console Log", icon: "terminal" },
-  { href: "/dashboard/translator", label: "Translator", icon: "translate" },
+  { href: "/dashboard/console-log", label: "控制台日志", icon: "terminal" },
+  { href: "/dashboard/translator", label: "翻译器", icon: "translate" },
 ];
 
 const systemItems = [
-  { href: "/dashboard/proxy-pools", label: "Proxy Pools", icon: "lan" },
-  { href: "/dashboard/skills", label: "Skills", icon: "extension" },
+  { href: "/dashboard/proxy-pools", label: "代理池", icon: "lan" },
+  { href: "/dashboard/skills", label: "技能", icon: "extension" },
 ];
 
 export default function Sidebar({ onClose }) {
@@ -132,22 +132,22 @@ export default function Sidebar({ onClose }) {
           {updateInfo && (
             <div className="flex flex-col gap-1.5 rounded p-1 -m-1">
               <span className="text-xs font-semibold text-green-600 dark:text-amber-500">
-                ↑ New version available: v{updateInfo.latestVersion}
+                ↑ 有更新可用：v{updateInfo.latestVersion}
               </span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowUpdateModal(true)}
                   className="px-2 py-1 rounded bg-green-600 hover:bg-green-700 dark:bg-amber-500 dark:hover:bg-amber-600 text-white text-[11px] font-semibold transition-colors cursor-pointer"
                 >
-                  Update now
+                  立即更新
                 </button>
                 <button
                   onClick={() => copy(INSTALL_CMD)}
-                  title="Copy install command"
+                  title="复制安装命令"
                   className="flex-1 text-left hover:opacity-80 transition-opacity cursor-pointer min-w-0"
                 >
                   <code className="block text-[10px] text-green-600/80 dark:text-amber-400/70 font-mono truncate">
-                    {copied ? "✓ copied!" : INSTALL_CMD}
+                    {copied ? "✓ 已复制!" : INSTALL_CMD}
                   </code>
                 </button>
               </div>
@@ -184,7 +184,7 @@ export default function Sidebar({ onClose }) {
           {/* System section */}
           <div className="pt-3 mt-2 space-y-0.5">
             <p className="px-4 text-xs font-semibold text-text-muted/60 uppercase tracking-wider mb-2">
-              System
+              系统
             </p>
 
             {/* Media Providers accordion */}
@@ -198,7 +198,7 @@ export default function Sidebar({ onClose }) {
               )}
             >
               <span className="material-symbols-outlined text-[18px]">perm_media</span>
-              <span className="text-[13px] font-medium flex-1 text-left">Media Providers</span>
+              <span className="text-[13px] font-medium flex-1 text-left">媒体提供商</span>
               <span className="material-symbols-outlined text-[14px] transition-transform" style={{ transform: mediaOpen ? "rotate(180deg)" : "rotate(0deg)" }}>
                 expand_more
               </span>
@@ -301,7 +301,7 @@ export default function Sidebar({ onClose }) {
               <span className="material-symbols-outlined text-[18px] group-hover:text-primary transition-colors">
                 computer
               </span>
-              <span className="text-[13px] font-medium">Remote</span>
+              <span className="text-[13px] font-medium">远程</span>
             </button>
 
             {/* Settings */}
@@ -323,7 +323,7 @@ export default function Sidebar({ onClose }) {
               >
                 settings
               </span>
-              <span className="text-[13px] font-medium">Settings</span>
+              <span className="text-[13px] font-medium">设置</span>
             </Link>
           </div>
         </nav>
@@ -338,10 +338,10 @@ export default function Sidebar({ onClose }) {
         isOpen={showUpdateModal}
         onClose={() => setShowUpdateModal(false)}
         onConfirm={handleUpdate}
-        title="Update 9Router"
-        message={`Show install command for v${updateInfo?.latestVersion || ""}? You can copy it and shutdown to install manually.`}
-        confirmText="Show Command"
-        cancelText="Cancel"
+        title="更新 9Router"
+        message={`显示 v${updateInfo?.latestVersion || ""} 的安装命令？你可以复制它并关闭服务以手动安装。`}
+        confirmText="显示命令"
+        cancelText="取消"
         variant="primary"
       />
 
@@ -363,10 +363,10 @@ export default function Sidebar({ onClose }) {
               <div className="flex items-center justify-center size-16 rounded-full bg-red-500/20 text-red-500 mx-auto mb-4">
                 <span className="material-symbols-outlined text-[32px]">power_off</span>
               </div>
-              <h2 className="text-xl font-semibold text-white mb-2">Server Disconnected</h2>
-              <p className="text-text-muted mb-6">The proxy server has been stopped.</p>
+              <h2 className="text-xl font-semibold text-white mb-2">已断开连接</h2>
+              <p className="text-text-muted mb-6">代理服务器已停止。</p>
               <Button variant="secondary" onClick={() => globalThis.location.reload()}>
-                Reload Page
+                重新加载页面
               </Button>
             </div>
           )}
@@ -389,39 +389,39 @@ function ManualUpdatePanel({ latestVersion, installCmd, copied, onCopyAndShutdow
           <span className="material-symbols-outlined text-[24px]">content_copy</span>
         </div>
         <div>
-          <h2 className="text-lg font-semibold">Update 9Router{latestVersion ? ` to v${latestVersion}` : ""}</h2>
+          <h2 className="text-lg font-semibold">更新 9Router{latestVersion ? ` 到 v${latestVersion}` : ""}</h2>
           <p className="text-xs text-white/60">
             {isDisconnected
-              ? "Server stopped. Paste the command into a terminal to install."
+              ? "服务器已停止。将命令粘贴到终端以安装。"
               : isCountingDown
-                ? `Command copied. Server will stop in ${countdown}s...`
-                : "Click the button below to copy the install command and shutdown."}
+                ? `命令已复制。服务器将在 ${countdown} 秒后停止...`
+                : "点击下方按钮复制安装命令并关闭服务。"}
           </p>
         </div>
       </div>
 
-      <p className="text-sm text-white/80 mb-2">Install command:</p>
+      <p className="text-sm text-white/80 mb-2">安装命令：</p>
       <div className="w-full px-3 py-2 rounded bg-white/5 mb-4">
         <code className="text-xs font-mono text-amber-400 break-all">{installCmd}</code>
       </div>
 
       <ol className="text-xs text-white/70 space-y-1 list-decimal list-inside mb-4">
-        <li>Click <strong>Copy & Shutdown</strong> below.</li>
-        <li>Paste the command into your terminal and press Enter.</li>
-        <li>Run <code className="px-1 rounded bg-white/10 text-green-400">9router</code> again after install.</li>
+        <li>点击下方 <strong>复制并关闭</strong>。</li>
+        <li>将命令粘贴到终端并按回车。</li>
+        <li>安装完成后重新运行 <code className="px-1 rounded bg-white/10 text-green-400">9router</code>。</li>
       </ol>
 
       {isDisconnected ? (
         <Button variant="secondary" fullWidth onClick={() => globalThis.location.reload()}>
-          Reload Page
-        </Button>
+            重新加载页面
+          </Button>
       ) : (
         <div className="flex gap-2">
           <Button variant="secondary" onClick={onCancel} disabled={isCountingDown}>
-            Cancel
+            取消
           </Button>
           <Button variant="primary" fullWidth onClick={onCopyAndShutdown} disabled={isCountingDown}>
-            {copied ? "✓ Copied — shutting down..." : isCountingDown ? `Shutting down in ${countdown}s` : "Copy & Shutdown"}
+            {copied ? "✓ 已复制 — 正在关闭..." : isCountingDown ? `将在 ${countdown} 秒后关闭` : "复制并关闭"}
           </Button>
         </div>
       )}

@@ -16,7 +16,7 @@ export default function IFlowCookieModal({ isOpen, onSuccess, onClose }) {
 
   const handleSubmit = async () => {
     if (!cookie.trim()) {
-      setError("Please paste your cookie");
+      setError("请粘贴您的 Cookie");
       return;
     }
 
@@ -33,7 +33,7 @@ export default function IFlowCookieModal({ isOpen, onSuccess, onClose }) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Authentication failed");
+        throw new Error(data.error || "认证失败");
       }
 
       setSuccess(true);
@@ -61,14 +61,14 @@ export default function IFlowCookieModal({ isOpen, onSuccess, onClose }) {
         {success ? (
           <div className="text-center py-8">
             <div className="text-6xl mb-4">✅</div>
-            <p className="text-lg font-medium text-text-primary">Authentication Successful!</p>
-            <p className="text-sm text-text-muted mt-2">Fresh API key obtained</p>
+            <p className="text-lg font-medium text-text-primary">认证成功！</p>
+            <p className="text-sm text-text-muted mt-2">已获取新的 API 密钥</p>
           </div>
         ) : (
           <>
             <div className="space-y-2">
               <p className="text-sm text-text-muted">
-                To get a fresh API key, paste your browser cookie from{" "}
+                要获取新的 API 密钥，请粘贴您从{" "}
                 <a
                   href="https://platform.iflow.cn"
                   target="_blank"
@@ -77,22 +77,23 @@ export default function IFlowCookieModal({ isOpen, onSuccess, onClose }) {
                 >
                   platform.iflow.cn
                 </a>
+                复制的浏览器 Cookie
               </p>
               <div className="bg-surface-secondary p-3 rounded-lg text-xs space-y-2">
-                <p className="font-medium text-text-primary">How to get cookie:</p>
+                <p className="font-medium text-text-primary">如何获取 Cookie：</p>
                 <ol className="list-decimal list-inside space-y-1 text-text-muted">
-                  <li>Open platform.iflow.cn in your browser</li>
-                  <li>Login to your account</li>
-                  <li>Open DevTools (F12) → Application/Storage → Cookies</li>
-                  <li>Copy the entire cookie string (must include BXAuth)</li>
-                  <li>Paste it below</li>
+                  <li>在浏览器中打开 platform.iflow.cn</li>
+                  <li>登录您的账户</li>
+                  <li>打开开发者工具 (F12) → 应用/存储 → Cookie</li>
+                  <li>复制完整的 Cookie 字符串（必须包含 BXAuth）</li>
+                  <li>粘贴到下方</li>
                 </ol>
               </div>
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-text-primary">
-                Cookie String
+                Cookie 字符串
               </label>
               <textarea
                 value={cookie}
@@ -112,10 +113,10 @@ export default function IFlowCookieModal({ isOpen, onSuccess, onClose }) {
 
             <div className="flex gap-3 pt-2">
               <Button variant="secondary" onClick={handleClose} disabled={loading} fullWidth>
-                Cancel
+                取消
               </Button>
               <Button onClick={handleSubmit} loading={loading} fullWidth>
-                Authenticate
+                认证
               </Button>
             </div>
           </>

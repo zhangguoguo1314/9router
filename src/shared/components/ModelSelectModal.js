@@ -27,7 +27,7 @@ export default function ModelSelectModal({
   onDeselect,
   selectedModel,
   activeProviders = [],
-  title = "Select Model",
+  title = "选择模型",
   modelAliases = {},
   kindFilter = null,
   addedModelValues = [],
@@ -394,7 +394,7 @@ export default function ModelSelectModal({
       {/* Info bar */}
       <div className="flex items-center gap-2 mb-3 px-2.5 py-2 bg-primary/8 border border-primary/20 rounded-lg text-xs text-text-muted">
         <span className="material-symbols-outlined text-primary shrink-0" style={{ fontSize: "14px" }}>info</span>
-        <span>Click to add, click again to remove. Changes are saved automatically.</span>
+        <span>点击添加，再次点击移除。更改自动保存。</span>
       </div>
 
       {/* Search - compact */}
@@ -405,7 +405,7 @@ export default function ModelSelectModal({
           </span>
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="搜索..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-8 pr-3 py-1.5 bg-surface border border-border rounded text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
@@ -420,7 +420,7 @@ export default function ModelSelectModal({
           <div>
             <div className="flex items-center gap-1.5 mb-1.5 sticky top-0 bg-surface py-0.5">
               <span className="material-symbols-outlined text-primary text-[14px]">layers</span>
-              <span className="text-xs font-medium text-primary">Combos</span>
+              <span className="text-xs font-medium text-primary">组合</span>
               <span className="text-[10px] text-text-muted">({filteredCombos.length})</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
@@ -526,7 +526,7 @@ export default function ModelSelectModal({
             <span className="material-symbols-outlined text-2xl mb-1 block">
               search_off
             </span>
-            <p className="text-xs">No models found</p>
+            <p className="text-xs">未找到模型</p>
           </div>
         )}
       </div>

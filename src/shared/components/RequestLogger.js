@@ -40,10 +40,10 @@ export default function RequestLogger() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Request Logs</h2>
+        <h2 className="text-xl font-semibold">请求日志</h2>
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium text-text-muted flex items-center gap-2 cursor-pointer">
-            <span>Auto Refresh (3s)</span>
+            <span>自动刷新 (3秒)</span>
             <div
               onClick={() => setAutoRefresh(!autoRefresh)}
               className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${autoRefresh ? "bg-primary" : "bg-bg-subtle border border-border"
@@ -61,20 +61,20 @@ export default function RequestLogger() {
       <Card className="overflow-hidden bg-black/5 dark:bg-black/20">
         <div className="p-0 overflow-x-auto max-h-[600px] overflow-y-auto font-mono text-xs">
           {loading && logs.length === 0 ? (
-            <div className="p-8 text-center text-text-muted">Loading logs...</div>
+            <div className="p-8 text-center text-text-muted">加载日志中...</div>
           ) : logs.length === 0 ? (
-            <div className="p-8 text-center text-text-muted">No logs recorded yet.</div>
+            <div className="p-8 text-center text-text-muted">暂无日志记录</div>
           ) : (
             <table className="w-full text-left border-collapse whitespace-nowrap">
               <thead className="sticky top-0 bg-bg-subtle border-b border-border z-10">
                 <tr>
-                  <th className="px-3 py-2 border-r border-border">DateTime</th>
-                  <th className="px-3 py-2 border-r border-border">Model</th>
-                  <th className="px-3 py-2 border-r border-border">Provider</th>
-                  <th className="px-3 py-2 border-r border-border">Account</th>
-                  <th className="px-3 py-2 border-r border-border">In</th>
-                  <th className="px-3 py-2 border-r border-border">Out</th>
-                  <th className="px-3 py-2">Status</th>
+                  <th className="px-3 py-2 border-r border-border">日期时间</th>
+                  <th className="px-3 py-2 border-r border-border">模型</th>
+                  <th className="px-3 py-2 border-r border-border">提供商</th>
+                  <th className="px-3 py-2 border-r border-border">账号</th>
+                  <th className="px-3 py-2 border-r border-border">输入</th>
+                  <th className="px-3 py-2 border-r border-border">输出</th>
+                  <th className="px-3 py-2">状态</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/50">
@@ -114,7 +114,7 @@ export default function RequestLogger() {
         </div>
       </Card>
       <div className="text-[10px] text-text-muted italic">
-        Logs are loaded from the request history database.
+        日志从请求历史数据库加载。
       </div>
     </div>
   );

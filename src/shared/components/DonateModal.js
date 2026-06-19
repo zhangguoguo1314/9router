@@ -47,12 +47,12 @@ export default function DonateModal({ isOpen, onClose }) {
         <div className="flex items-center justify-between p-3 border-b border-black/5 dark:border-white/5">
           <h2 className="text-lg font-semibold text-text-main flex items-center gap-2">
             <span className="material-symbols-outlined text-pink-500">volunteer_activism</span>
-            {data?.title || "Support 9Router"}
+            {data?.title || "支持 9Router"}
           </h2>
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg text-text-muted hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-            aria-label="Close"
+            aria-label="关闭"
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
@@ -62,11 +62,11 @@ export default function DonateModal({ isOpen, onClose }) {
           {loading && (
             <div className="flex items-center justify-center py-10 text-text-muted">
               <span className="material-symbols-outlined animate-spin mr-2">progress_activity</span>
-              Loading...
+              加载中...
             </div>
           )}
           {error && (
-            <div className="text-red-500 py-4">Failed to load donate info: {error}</div>
+            <div className="text-red-500 py-4">加载捐赠信息失败：{error}</div>
           )}
           {!loading && !error && data && (
             <>
@@ -122,7 +122,7 @@ function DonateChannelCard({ channel }) {
           className="mt-3 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium text-white hover:opacity-90 transition-opacity"
           style={{ backgroundColor: color }}
         >
-          Open
+          打开
           <span className="material-symbols-outlined text-[16px]">open_in_new</span>
         </a>
       )}

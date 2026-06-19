@@ -145,7 +145,7 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
       }
     }
 
-    setError("Authorization timeout");
+    setError("授权超时");
     setStep("error");
     setPolling(false);
   }, [provider, onSuccess]);
@@ -267,7 +267,7 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
           xaiProxyActive = proxyData.success;
           xaiServerSide = !!proxyData.serverSide;
           if (!xaiProxyActive && proxyData.reason === "port_busy") {
-            throw new Error("Port 56121 in use; close the conflicting process and retry");
+            throw new Error("端口 56121 已被占用；请关闭冲突进程后重试");
           }
         } catch (e) {
           if (e?.message) throw e;
@@ -359,7 +359,7 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
         }
         if (data.status === "error") {
           callbackProcessedRef.current = true;
-          setError(data.error || "Authentication failed");
+          setError(data.error || "认证失败");
           setStep("error");
           return;
         }
@@ -368,7 +368,7 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
       }
       if (attempts >= MAX_ATTEMPTS) {
         callbackProcessedRef.current = true;
-        setError("Authentication timeout");
+        setError("认证超时");
         setStep("error");
         return;
       }
@@ -487,7 +487,7 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
       }
 
       if (!code) {
-        throw new Error(provider === "xai" ? "Paste the callback URL or copied xAI code" : "No authorization code found in URL");
+        throw new Error(provider === "xai" ? "粘贴回调 URL 或复制的 xAI 代码" : "URL 中未找到授权码");
       }
 
       await exchangeTokens(code, state);
@@ -510,9 +510,9 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
   if (!provider || !providerInfo) return null;
   const isXaiProvider = provider === "xai";
   const deviceLoginUrl = deviceData?.verification_uri_complete || deviceData?.verification_uri || "";
-  const modalTitle = isXaiProvider ? "Connect Grok Build OAuth" : `Connect ${providerInfo.name}`;
+  const modalTitle = isXaiProvider ? "连接 Grok Build OAuth" : `连接 ${providerInfo.name}`;
   const manualPlaceholder = isXaiProvider
-    ? "http://127.0.0.1:56121/callback?code=... or copied code"
+    ? "http://127.0.0.1:56121/callback?code=... 或复制的代码"
     : placeholderUrl;
 
   return (
@@ -527,14 +527,14 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
                 progress_activity
               </span>
               <span className="text-sm">
-                {isXaiProvider ? "Waiting for Grok Build OAuth…" : "Waiting for popup authorization…"}
+                {isXaiProvider ? "等待 Grok Build OAuth…" : "等待弹窗授权…"}
               </span>
             </div>
 
             {/* Divider */}
             <div className="flex items-center gap-3 my-1">
               <div className="flex-1 h-px bg-border" />
-              <span className="text-xs text-text-muted uppercase tracking-wider">Or paste callback URL manually</span>
+              <span className="text-xs text-text-muted uppercase tracking-wider">或手动粘贴回调 URL</span>
               <div className="flex-1 h-px bg-border" />
             </div>
 
@@ -542,24 +542,24 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
             <div className="space-y-4">
               <div>
                 <p className="text-sm font-medium mb-2">
-                  Step 1: Open this {isXaiProvider ? "Grok Build OAuth URL" : "URL"} in your browser
+                  步骤 1：在浏览器中打开此 {isXaiProvider ? "Grok Build OAuth URL" : "URL"}
                 </p>
                 <div className="flex gap-2">
                   <Input value={authData?.authUrl || ""} readOnly className="flex-1 font-mono text-xs" />
                   <Button variant="secondary" icon={copied === "auth_url" ? "check" : "content_copy"} onClick={() => copy(authData?.authUrl, "auth_url")} disabled={!authData?.authUrl}>
-                    Copy
+                    复制
                   </Button>
                 </div>
               </div>
 
               <div>
                 <p className="text-sm font-medium mb-2">
-                  Step 2: Paste the {provider === "xai" ? "callback URL or copied code" : "callback URL"} here
+                  步骤 2：在此处粘贴 {provider === "xai" ? "回调 URL 或复制的代码" : "回调 URL"}
                 </p>
                 <p className="text-xs text-text-muted mb-2">
                   {provider === "xai"
-                    ? "If xAI shows a code instead of redirecting, paste that code here."
-                    : "After authorization, copy the full URL from your browser."}
+                    ? "如果 xAI 显示代码而非重定向，请在此处粘贴该代码。"
+                    : "授权后，从浏览器复制完整 URL。"}
                 </p>
                 <Input
                   value={callbackUrl}
@@ -572,10 +572,10 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
 
             <div className="flex gap-2">
               <Button onClick={handleManualSubmit} fullWidth disabled={!callbackUrl}>
-                Connect
+                连接
               </Button>
               <Button onClick={handleClose} variant="ghost" fullWidth>
-                Cancel
+                取消
               </Button>
             </div>
           </>
@@ -586,10 +586,10 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
           <>
             <div className="text-center py-4">
               <p className="text-sm text-text-muted mb-4">
-                Visit the login URL below and authorize:
+                访问下方登录 URL 并授权：
               </p>
               <div className="bg-sidebar p-4 rounded-lg mb-4">
-                <p className="text-xs text-text-muted mb-1">Login URL</p>
+                <p className="text-xs text-text-muted mb-1">登录 URL</p>
                 <div className="flex items-center gap-2">
                   <code className="flex-1 text-sm break-all">{deviceLoginUrl}</code>
                   <Button
@@ -606,12 +606,12 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
                     onClick={() => window.open(deviceLoginUrl, "_blank", "noopener,noreferrer")}
                     disabled={!deviceLoginUrl}
                   >
-                    Open
+                    打开
                   </Button>
                 </div>
               </div>
               <div className="bg-primary/10 p-4 rounded-lg">
-                <p className="text-xs text-text-muted mb-1">Your Code</p>
+                <p className="text-xs text-text-muted mb-1">你的代码</p>
                 <div className="flex items-center justify-center gap-2">
                   <p className="text-2xl font-mono font-bold text-primary">{deviceData.user_code}</p>
                   <Button
@@ -626,7 +626,7 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
             {polling && (
               <div className="flex items-center justify-center gap-2 text-sm text-text-muted">
                 <span className="material-symbols-outlined animate-spin">progress_activity</span>
-                Waiting for authorization...
+                等待授权…
               </div>
             )}
           </>
@@ -638,12 +638,12 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
             <div className="size-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
               <span className="material-symbols-outlined text-3xl text-green-600">check_circle</span>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Connected Successfully!</h3>
+            <h3 className="text-lg font-semibold mb-2">连接成功！</h3>
             <p className="text-sm text-text-muted mb-4">
-              Your {providerInfo.name} account has been connected.
+              你的 {providerInfo.name} 账号已连接。
             </p>
             <Button onClick={handleClose} fullWidth>
-              Done
+              完成
             </Button>
           </div>
         )}
@@ -654,14 +654,14 @@ export default function OAuthModal({ isOpen, provider, providerInfo, onSuccess, 
             <div className="size-16 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
               <span className="material-symbols-outlined text-3xl text-red-600">error</span>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Connection Failed</h3>
+            <h3 className="text-lg font-semibold mb-2">连接失败</h3>
             <p className="text-sm text-red-600 mb-4">{error}</p>
             <div className="flex gap-2">
               <Button onClick={startOAuthFlow} variant="secondary" fullWidth>
-                Try Again
+                重试
               </Button>
               <Button onClick={handleClose} variant="ghost" fullWidth>
-                Cancel
+                取消
               </Button>
             </div>
           </div>

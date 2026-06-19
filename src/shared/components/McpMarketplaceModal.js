@@ -104,14 +104,14 @@ export default function McpMarketplaceModal({ isOpen, onClose, onAdd, addedNames
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Browse MCP Marketplace" size="lg">
+    <Modal isOpen={isOpen} onClose={onClose} title="浏览 MCP 市场" size="lg">
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by name or description..."
+            placeholder="按名称或描述搜索..."
             className="flex-1 px-2 py-1.5 bg-surface rounded text-xs border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
           />
           <select
@@ -119,8 +119,8 @@ export default function McpMarketplaceModal({ isOpen, onClose, onAdd, addedNames
             onChange={(e) => setFilter(e.target.value)}
             className="px-2 py-1.5 bg-surface rounded text-xs border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
           >
-            <option value="all">All</option>
-            <option value="authless">Authless</option>
+            <option value="all">全部</option>
+            <option value="authless">无需认证</option>
             <option value="oauth">OAuth</option>
           </select>
         </div>
@@ -132,14 +132,14 @@ export default function McpMarketplaceModal({ isOpen, onClose, onAdd, addedNames
         {loading && (
           <div className="flex items-center gap-2 text-text-muted text-xs py-4 justify-center">
             <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>
-            <span>Loading registry...</span>
+            <span>加载注册表...</span>
           </div>
         )}
 
         {!loading && (
           <div className="flex flex-col gap-1 max-h-[60vh] overflow-y-auto">
             {filtered.length === 0 && (
-              <div className="text-center text-xs text-text-muted py-6">No servers match filter</div>
+              <div className="text-center text-xs text-text-muted py-6">没有匹配的服务器</div>
             )}
             {filtered.map((s) => {
               const added = addedSet.has(s.slug || s.name);
@@ -164,10 +164,10 @@ export default function McpMarketplaceModal({ isOpen, onClose, onAdd, addedNames
                         {s.oauth ? (
                           <span className="px-1 py-0.5 text-[9px] rounded bg-amber-500/10 text-amber-600">OAuth</span>
                         ) : (
-                          <span className="px-1 py-0.5 text-[9px] rounded bg-green-500/10 text-green-600">Authless</span>
+                          <span className="px-1 py-0.5 text-[9px] rounded bg-green-500/10 text-green-600">无需认证</span>
                         )}
                         {s.toolCount > 0 && (
-                          <span className="text-[10px] text-text-muted">{s.toolCount} tools</span>
+                          <span className="text-[10px] text-text-muted">{s.toolCount} 个工具</span>
                         )}
                       </div>
                       {s.description && (
@@ -185,7 +185,7 @@ export default function McpMarketplaceModal({ isOpen, onClose, onAdd, addedNames
                           : "bg-primary/10 border border-primary/40 text-primary hover:bg-primary/20"
                       }`}
                     >
-                      {added ? "Added" : expanded ? "Cancel" : "+ Add"}
+                      {added ? "已添加" : expanded ? "取消" : "+ 添加"}
                     </button>
                   </div>
                   {expanded && (
@@ -193,28 +193,28 @@ export default function McpMarketplaceModal({ isOpen, onClose, onAdd, addedNames
                       {isLoadingTools && (
                         <div className="flex items-center gap-2 text-text-muted text-[10px] py-1">
                           <span className="material-symbols-outlined animate-spin text-[14px]">progress_activity</span>
-                          <span>Probing server for tools...</span>
+                          <span>正在探测服务器工具...</span>
                         </div>
                       )}
                       {!isLoadingTools && cache?.requiresAuth && (
                         <p className="text-[10px] text-amber-600 bg-amber-500/10 px-2 py-1 rounded">
-                          🔐 OAuth required. Add now and authenticate after Apply; tool list will be discovered after first connect.
+                          🔐 需要 OAuth。现在添加，应用后再认证；工具列表将在首次连接后发现。
                         </p>
                       )}
                       {!isLoadingTools && cache?.error && !cache?.requiresAuth && (
-                        <p className="text-[10px] text-red-600 bg-red-500/10 px-2 py-1 rounded">Probe failed: {cache.error}</p>
+                        <p className="text-[10px] text-red-600 bg-red-500/10 px-2 py-1 rounded">探测失败：{cache.error}</p>
                       )}
                       {!isLoadingTools && toolKeys.length === 0 && !cache?.requiresAuth && !cache?.error && (
-                        <p className="text-[10px] text-text-muted">No tools advertised by server.</p>
+                        <p className="text-[10px] text-text-muted">服务器未声明任何工具。</p>
                       )}
                       {!isLoadingTools && toolKeys.length > 0 && (
                         <>
                           <div className="flex items-center justify-between">
-                            <span className="text-[10px] text-text-muted">{selectedCount}/{toolKeys.length} tools enabled</span>
+                            <span className="text-[10px] text-text-muted">已启用 {selectedCount}/{toolKeys.length} 个工具</span>
                             <div className="flex gap-1">
-                              <button onClick={() => setAllTools(s.url, true)} className="text-[10px] text-primary hover:underline">All</button>
+                              <button onClick={() => setAllTools(s.url, true)} className="text-[10px] text-primary hover:underline">全选</button>
                               <span className="text-[10px] text-text-muted">·</span>
-                              <button onClick={() => setAllTools(s.url, false)} className="text-[10px] text-primary hover:underline">None</button>
+                              <button onClick={() => setAllTools(s.url, false)} className="text-[10px] text-primary hover:underline">全不选</button>
                             </div>
                           </div>
                           <div className="grid grid-cols-2 gap-1 max-h-40 overflow-y-auto">
@@ -236,7 +236,7 @@ export default function McpMarketplaceModal({ isOpen, onClose, onAdd, addedNames
                         onClick={() => confirmAdd(s)}
                         className="self-end px-2 py-1 rounded text-[10px] font-medium bg-primary text-white hover:bg-primary/90"
                       >
-                        ✓ Confirm Add
+                        ✓ 确认添加
                       </button>
                     </div>
                   )}
@@ -247,7 +247,7 @@ export default function McpMarketplaceModal({ isOpen, onClose, onAdd, addedNames
         )}
 
         <div className="text-[10px] text-text-muted text-right">
-          {filtered.length} of {servers.length} servers
+          {filtered.length} / {servers.length} 个服务器
         </div>
       </div>
     </Modal>

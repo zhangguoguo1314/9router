@@ -160,22 +160,22 @@ export default function EditConnectionModal({ isOpen, connection, proxyPools, on
   if (!connection) return null;
 
   return (
-    <Modal isOpen={isOpen} title="Edit Connection" onClose={onClose}>
+    <Modal isOpen={isOpen} title="编辑连接" onClose={onClose}>
       <div className="flex flex-col gap-4">
         <Input
-          label="Name"
+          label="名称"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          placeholder={isOAuth ? "Account name" : "Production Key"}
+          placeholder={isOAuth ? "账号名称" : "生产环境 Key"}
         />
         {isOAuth && connection.email && (
           <div className="bg-sidebar/50 p-3 rounded-lg">
-            <p className="text-sm text-text-muted mb-1">Email</p>
+            <p className="text-sm text-text-muted mb-1">邮箱</p>
             <p className="font-medium">{connection.email}</p>
           </div>
         )}
         <Input
-          label="Priority"
+          label="优先级"
           type="number"
           value={formData.priority}
           onChange={(e) => setFormData({ ...formData, priority: Number.parseInt(e.target.value, 10) || 1 })}
@@ -189,19 +189,19 @@ export default function EditConnectionModal({ isOpen, connection, proxyPools, on
                 type="password"
                 value={formData.apiKey}
                 onChange={(e) => setFormData({ ...formData, apiKey: e.target.value })}
-                placeholder="Enter new API key"
-                hint="Leave blank to keep the current API key."
+                placeholder="输入新 API key"
+                hint="留空以保留当前 API key。"
                 className="flex-1"
               />
               <div className="pt-6">
                 <Button onClick={handleValidate} disabled={!formData.apiKey || validating || saving} variant="secondary">
-                  {validating ? "Checking..." : "Check"}
+                  {validating ? "检查中..." : "检查"}
                 </Button>
               </div>
             </div>
             {validationResult && (
               <Badge variant={validationResult === "success" ? "success" : "error"}>
-                {validationResult === "success" ? "Valid" : "Invalid"}
+                {validationResult === "success" ? "有效" : "无效"}
               </Badge>
             )}
           </>
@@ -209,35 +209,35 @@ export default function EditConnectionModal({ isOpen, connection, proxyPools, on
 
         {isAzure && (
           <div className="bg-sidebar/50 p-4 rounded-lg border border-accent/20">
-            <h3 className="font-semibold mb-3 text-sm">Azure OpenAI Configuration</h3>
+            <h3 className="font-semibold mb-3 text-sm">Azure OpenAI 配置</h3>
             <div className="flex flex-col gap-3">
               <Input
-                label="Azure Endpoint"
+                label="Azure 端点"
                 value={azureData.azureEndpoint}
                 onChange={(e) => setAzureData({ ...azureData, azureEndpoint: e.target.value })}
                 placeholder="https://your-resource.openai.azure.com"
-                hint="Your Azure OpenAI resource endpoint URL"
+                hint="你的 Azure OpenAI 资源端点 URL"
               />
               <Input
-                label="Deployment Name"
+                label="部署名称"
                 value={azureData.deployment}
                 onChange={(e) => setAzureData({ ...azureData, deployment: e.target.value })}
                 placeholder="gpt-4"
-                hint="The deployment name in your Azure resource"
+                hint="Azure 资源中的部署名称"
               />
               <Input
-                label="API Version"
+                label="API 版本"
                 value={azureData.apiVersion}
                 onChange={(e) => setAzureData({ ...azureData, apiVersion: e.target.value })}
                 placeholder="2024-10-01-preview"
-                hint="Azure OpenAI API version to use"
+                hint="要使用的 Azure OpenAI API 版本"
               />
               <Input
-                label="Organization"
+                label="组织"
                 value={azureData.organization}
                 onChange={(e) => setAzureData({ ...azureData, organization: e.target.value })}
-                placeholder="Organization ID"
-                hint="Required for billing"
+                placeholder="组织 ID"
+                hint="计费所需"
               />
             </div>
           </div>
@@ -246,19 +246,19 @@ export default function EditConnectionModal({ isOpen, connection, proxyPools, on
         {!isCompatible && !isAzure && !isCloudflareAi && (
           <div className="flex items-center gap-3">
             <Button onClick={handleTest} variant="secondary" disabled={testing}>
-              {testing ? "Testing..." : "Test Connection"}
+              {testing ? "测试中..." : "测试连接"}
             </Button>
             {testResult && (
               <Badge variant={testResult === "success" ? "success" : "error"}>
-                {testResult === "success" ? "Valid" : "Failed"}
+                {testResult === "success" ? "有效" : "失败"}
               </Badge>
             )}
           </div>
         )}
 
         <div className="flex gap-2">
-          <Button onClick={handleSubmit} fullWidth disabled={saving}>{saving ? "Saving..." : "Save"}</Button>
-          <Button onClick={onClose} variant="ghost" fullWidth>Cancel</Button>
+          <Button onClick={handleSubmit} fullWidth disabled={saving}>{saving ? "保存中..." : "保存"}</Button>
+          <Button onClick={onClose} variant="ghost" fullWidth>取消</Button>
         </div>
       </div>
     </Modal>

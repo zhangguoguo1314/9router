@@ -44,9 +44,9 @@ export default function Pagination({
       {/* Info text */}
       {totalItems > 0 && (
         <div className="text-sm text-text-muted">
-          Showing <span className="font-medium text-text-main">{startItem}</span> to{" "}
-          <span className="font-medium text-text-main">{endItem}</span> of{" "}
-          <span className="font-medium text-text-main">{totalItems}</span> results
+          显示第 <span className="font-medium text-text-main">{startItem}</span> 到{" "}
+          <span className="font-medium text-text-main">{endItem}</span> 条，共{" "}
+          <span className="font-medium text-text-main">{totalItems}</span> 条结果
         </div>
       )}
 
@@ -54,7 +54,7 @@ export default function Pagination({
         {/* Page size selector */}
         {onPageSizeChange && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-text-muted">Rows:</span>
+            <span className="text-sm text-text-muted">每页行数：</span>
             <select
               value={pageSize}
               onChange={(e) => onPageSizeChange(Number(e.target.value))}

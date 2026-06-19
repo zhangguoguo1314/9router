@@ -13,7 +13,7 @@ export default function LoginPage() {
   const [hasPassword, setHasPassword] = useState(null);
   const [authMode, setAuthMode] = useState("password");
   const [oidcConfigured, setOidcConfigured] = useState(false);
-  const [oidcLoginLabel, setOidcLoginLabel] = useState("Sign in with OIDC");
+  const [oidcLoginLabel, setOidcLoginLabel] = useState("使用 OIDC 登录");
   const [mustChange, setMustChange] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const router = useRouter();
@@ -47,7 +47,7 @@ export default function LoginPage() {
           setHasPassword(!!data.hasPassword);
           setAuthMode(data.authMode || "password");
           setOidcConfigured(data.oidcConfigured === true);
-          setOidcLoginLabel(data.oidcLoginLabel || "Sign in with OIDC");
+          setOidcLoginLabel(data.oidcLoginLabel || "使用 OIDC 登录");
         } else {
           // Safe fallback on non-OK response to avoid infinite loading state.
           setHasPassword(true);
@@ -83,12 +83,12 @@ export default function LoginPage() {
         router.refresh();
       } else {
         const data = await res.json();
-        setError(data.error || "Invalid password");
+        setError(data.error || "密码错误");
         if (data.resetHint) setResetHint(data.resetHint);
         if (data.retryAfter) setRetryAfter(Number(data.retryAfter));
       }
     } catch (err) {
-      setError("An error occurred. Please try again.");
+      setError("发生错误，请重试。");
     } finally {
       setLoading(false);
     }
@@ -110,10 +110,10 @@ export default function LoginPage() {
         router.refresh();
       } else {
         const data = await res.json();
-        setError(data.error || "Failed to set password");
+        setError(data.error || "设置密码失败");
       }
     } catch (err) {
-      setError("An error occurred. Please try again.");
+      setError("发生错误，请重试。");
     } finally {
       setLoading(false);
     }
@@ -132,7 +132,7 @@ export default function LoginPage() {
       <div className="min-h-screen flex items-center justify-center bg-bg p-4">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          <p className="text-text-muted mt-4">Loading...</p>
+          <p className="text-text-muted mt-4">加载中...</p>
         </div>
       </div>
     );
@@ -147,8 +147,8 @@ export default function LoginPage() {
           <h1 className="text-3xl font-bold text-primary mb-2">9Router</h1>
           <p className="text-text-muted">
             {authMode === "oidc" && oidcConfigured
-              ? "Sign in with your OIDC provider to access the dashboard"
-              : "Enter your password to access the dashboard"}
+              ? "使用 OIDC 提供商登录以访问控制台"
+              : "输入密码访问控制台"}
           </p>
         </div>
 
@@ -156,13 +156,13 @@ export default function LoginPage() {
           {mustChange ? (
             <form onSubmit={handleSetNewPassword} className="flex flex-col gap-4">
               <p className="text-sm text-amber-600 dark:text-amber-400 text-center">
-                Set a new password before accessing the dashboard remotely.
+                远程访问控制台前请设置新密码。
               </p>
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium">New password</label>
+                <label className="text-sm font-medium">新密码</label>
                 <Input
                   type="password"
-                  placeholder="Enter new password"
+                  placeholder="输入新密码"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
@@ -171,7 +171,7 @@ export default function LoginPage() {
                 {error && <p className="text-xs text-red-500">{error}</p>}
               </div>
               <Button type="submit" variant="primary" className="w-full" loading={loading} disabled={!newPassword}>
-                Set password
+                设置密码
               </Button>
             </form>
           ) : (
@@ -188,21 +188,21 @@ export default function LoginPage() {
               <form onSubmit={handleLogin} className="flex flex-col gap-4">
                 {((authMode === "oidc" && !oidcConfigured) || (authMode === "both" && !oidcConfigured)) && (
                   <p className="text-xs text-amber-600 dark:text-amber-400 text-center">
-                    OIDC login is enabled, but the issuer/client fields are not configured yet. Password login is still available for recovery.
+                    OIDC 登录已启用，但 issuer/client 字段尚未配置。密码登录仍可作为恢复方式。
                   </p>
                 )}
 
                 {authMode === "both" && oidcConfigured && (
                   <p className="text-xs text-text-muted text-center">
-                    Password and OIDC login are both enabled.
+                    密码和 OIDC 登录均已启用。
                   </p>
                 )}
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium">Password</label>
+                  <label className="text-sm font-medium">密码</label>
                   <Input
                     type="password"
-                    placeholder="Enter password"
+                    placeholder="输入密码"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -211,12 +211,12 @@ export default function LoginPage() {
                   {error && <p className="text-xs text-red-500">{error}</p>}
                   {retryAfter > 0 && (
                     <p className="text-xs text-amber-600 dark:text-amber-400">
-                      Locked. Retry in <span className="font-mono">{retryAfter}s</span>.
+                      已锁定，<span className="font-mono">{retryAfter}</span> 秒后重试
                     </p>
                   )}
                   {resetHint && (
                     <p className="text-xs text-text-muted">
-                      Forgot password? Open <code className="bg-sidebar px-1 rounded">9router</code> CLI on the host → <b>Settings</b> → <b>Reset Password to Default</b>.
+                      忘记密码？打开 <code className="bg-sidebar px-1 rounded">9router</code> CLI → <b>设置</b> → <b>重置为默认密码</b>。
                     </p>
                   )}
                 </div>
@@ -228,15 +228,15 @@ export default function LoginPage() {
                   loading={loading}
                   disabled={retryAfter > 0}
                 >
-                  {retryAfter > 0 ? `Wait ${retryAfter}s` : "Login"}
+                  {retryAfter > 0 ? `等待 ${retryAfter} 秒` : "登录"}
                 </Button>
 
                 <p className="text-xs text-center text-text-muted mt-2">
-                  Default password is <code className="bg-sidebar px-1 rounded">123456</code>
+                  默认密码为 <code className="bg-sidebar px-1 rounded">123456</code>
                 </p>
                 {hasPassword === false && (
                   <p className="text-xs text-center text-amber-600 dark:text-amber-400">
-                    Security risk: no password set. You will be asked to set one when logging in remotely.
+                    安全风险：未设置密码。远程登录时会被要求设置密码。
                   </p>
                 )}
               </form>

@@ -94,55 +94,55 @@ export default function AddCustomEmbeddingModal({ isOpen, onClose, onCreated, on
     if (valid) {
       return (
         <>
-          <Badge variant="success">Valid</Badge>
-          {dimensions && <span className="text-sm text-text-muted">{dimensions} dims</span>}
+          <Badge variant="success">有效</Badge>
+          {dimensions && <span className="text-sm text-text-muted">{dimensions} 维</span>}
         </>
       );
     }
     return (
       <div className="flex flex-col gap-1">
-        <Badge variant="error">Invalid</Badge>
+        <Badge variant="error">无效</Badge>
         {error && <span className="text-sm text-red-500">{error}</span>}
       </div>
     );
   };
 
   return (
-    <Modal isOpen={isOpen} title={isEdit ? "Edit Custom Embedding" : "Add Custom Embedding"} onClose={onClose}>
+    <Modal isOpen={isOpen} title={isEdit ? "编辑自定义 Embedding" : "添加自定义 Embedding"} onClose={onClose}>
       <div className="flex flex-col gap-4">
         <Input
-          label="Name"
+          label="名称"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           placeholder="Voyage AI"
-          hint="Required. A friendly label for this embedding provider."
+          hint="必填。此 Embedding 提供商的友好标签。"
         />
         <Input
-          label="Prefix"
+          label="前缀"
           value={formData.prefix}
           onChange={(e) => setFormData({ ...formData, prefix: e.target.value })}
           placeholder="voyage"
-          hint="Required. Used as the provider prefix for model IDs (e.g. voyage/voyage-3)."
+          hint="必填。用作模型 ID 的提供商前缀（例如 voyage/voyage-3）。"
         />
         <Input
           label="Base URL"
           value={formData.baseUrl}
           onChange={(e) => setFormData({ ...formData, baseUrl: e.target.value })}
           placeholder="https://api.voyageai.com/v1"
-          hint="Most embedding APIs are OpenAI-compatible: Voyage, Cohere, Jina, Mistral, Together..."
+          hint="大多数 Embedding API 兼容 OpenAI：Voyage、Cohere、Jina、Mistral、Together..."
         />
         <Input
-          label="API Key (for Check)"
+          label="API Key（用于检查）"
           type="password"
           value={checkKey}
           onChange={(e) => setCheckKey(e.target.value)}
         />
         <Input
-          label="Model ID (for Check)"
+          label="模型 ID（用于检查）"
           value={checkModelId}
           onChange={(e) => setCheckModelId(e.target.value)}
-          placeholder="e.g. voyage-3, embed-english-v3.0, text-embedding-3-small"
-          hint="Required for validation. Will send a test embeddings request."
+          placeholder="例如 voyage-3、embed-english-v3.0、text-embedding-3-small"
+          hint="验证所需。将发送测试 Embedding 请求。"
         />
         <div className="flex items-center gap-3">
           <Button
@@ -150,7 +150,7 @@ export default function AddCustomEmbeddingModal({ isOpen, onClose, onCreated, on
             disabled={!checkKey || !checkModelId.trim() || validating || !formData.baseUrl.trim()}
             variant="secondary"
           >
-            {validating ? "Checking..." : "Check"}
+            {validating ? "检查中..." : "检查"}
           </Button>
           {renderValidationResult()}
         </div>
@@ -160,9 +160,9 @@ export default function AddCustomEmbeddingModal({ isOpen, onClose, onCreated, on
             fullWidth
             disabled={!formData.name.trim() || !formData.prefix.trim() || !formData.baseUrl.trim() || submitting}
           >
-            {submitting ? (isEdit ? "Saving..." : "Creating...") : (isEdit ? "Save" : "Create")}
+            {submitting ? (isEdit ? "保存中..." : "创建中...") : (isEdit ? "保存" : "创建")}
           </Button>
-          <Button onClick={onClose} variant="ghost" fullWidth>Cancel</Button>
+          <Button onClick={onClose} variant="ghost" fullWidth>取消</Button>
         </div>
       </div>
     </Modal>

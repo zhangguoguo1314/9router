@@ -37,10 +37,10 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
           setRefreshToken(data.refreshToken);
           setAutoDetected(true);
         } else {
-          setError(data.error || "Could not auto-detect token");
+          setError(data.error || "无法自动检测 Token");
         }
       } catch (err) {
-        setError("Failed to auto-detect token");
+        setError("自动检测 Token 失败");
       } finally {
         setAutoDetecting(false);
       }
@@ -61,7 +61,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
 
   const handleImportToken = async () => {
     if (!refreshToken.trim()) {
-      setError("Please enter a refresh token");
+      setError("请输入 refresh token");
       return;
     }
 
@@ -78,7 +78,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Import failed");
+        throw new Error(data.error || "导入失败");
       }
 
       // Success - notify parent to refresh connections
@@ -92,7 +92,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
 
   const handleIdcContinue = () => {
     if (!idcStartUrl.trim()) {
-      setError("Please enter your IDC start URL");
+      setError("请输入你的 IDC 起始 URL");
       return;
     }
     onMethodSelect("idc", { startUrl: idcStartUrl.trim(), region: idcRegion });
@@ -100,7 +100,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
 
   const handleApiKeyImport = async () => {
     if (!apiKey.trim()) {
-      setError("Please enter an API key");
+      setError("请输入 API key");
       return;
     }
 
@@ -120,7 +120,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Import failed");
+        throw new Error(data.error || "导入失败");
       }
 
       // Success - notify parent to refresh connections
@@ -137,13 +137,13 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
   };
 
   return (
-    <Modal isOpen={isOpen} title="Connect Kiro" onClose={onClose} size="lg">
+    <Modal isOpen={isOpen} title="连接 Kiro" onClose={onClose} size="lg">
       <div className="flex flex-col gap-4">
         {/* Method Selection */}
         {!selectedMethod && (
           <div className="space-y-3">
             <p className="text-sm text-text-muted mb-4">
-              Choose your authentication method:
+              选择认证方式：
             </p>
 
             {/* AWS Builder ID */}
@@ -156,7 +156,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
                 <div className="flex-1">
                   <h3 className="font-semibold mb-1">AWS Builder ID</h3>
                   <p className="text-sm text-text-muted">
-                    Recommended for most users. Free AWS account required.
+                    推荐大多数用户使用。需要免费 AWS 账号。
                   </p>
                 </div>
               </div>
@@ -172,7 +172,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
                 <div className="flex-1">
                   <h3 className="font-semibold mb-1">AWS IAM Identity Center</h3>
                   <p className="text-sm text-text-muted">
-                    For enterprise users with custom AWS IAM Identity Center.
+                    面向使用自定义 AWS IAM Identity Center 的企业用户。
                   </p>
                 </div>
               </div>
@@ -188,7 +188,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
                 <div className="flex-1">
                   <h3 className="font-semibold mb-1">API Key</h3>
                   <p className="text-sm text-text-muted">
-                    Use a long-lived Kiro/CodeWhisperer API key (headless auth).
+                    使用长期有效的 Kiro/CodeWhisperer API key（无头认证）。
                   </p>
                 </div>
               </div>
@@ -202,9 +202,9 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
               <div className="flex items-start gap-3">
                 <span className="material-symbols-outlined text-primary mt-0.5">account_circle</span>
                 <div className="flex-1">
-                  <h3 className="font-semibold mb-1">Google Account</h3>
+                  <h3 className="font-semibold mb-1">Google 账号</h3>
                   <p className="text-sm text-text-muted">
-                    Login with your Google account (manual callback).
+                    使用 Google 账号登录（手动回调）。
                   </p>
                 </div>
               </div>
@@ -218,9 +218,9 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
               <div className="flex items-start gap-3">
                 <span className="material-symbols-outlined text-primary mt-0.5">code</span>
                 <div className="flex-1">
-                  <h3 className="font-semibold mb-1">GitHub Account</h3>
+                  <h3 className="font-semibold mb-1">GitHub 账号</h3>
                   <p className="text-sm text-text-muted">
-                    Login with your GitHub account (manual callback).
+                    使用 GitHub 账号登录（手动回调）。
                   </p>
                 </div>
               </div>
@@ -234,9 +234,9 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
               <div className="flex items-start gap-3">
                 <span className="material-symbols-outlined text-primary mt-0.5">file_upload</span>
                 <div className="flex-1">
-                  <h3 className="font-semibold mb-1">Import Token</h3>
+                  <h3 className="font-semibold mb-1">导入 Token</h3>
                   <p className="text-sm text-text-muted">
-                    Paste refresh token from Kiro IDE.
+                    从 Kiro IDE 粘贴 refresh token。
                   </p>
                 </div>
               </div>
@@ -249,7 +249,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-2">
-                IDC Start URL <span className="text-red-500">*</span>
+                IDC 起始 URL <span className="text-red-500">*</span>
               </label>
               <Input
                 value={idcStartUrl}
@@ -258,13 +258,13 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
                 className="font-mono text-sm"
               />
               <p className="text-xs text-text-muted mt-1">
-                Your organization&apos;s AWS IAM Identity Center URL
+                你组织的 AWS IAM Identity Center URL
               </p>
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">
-                AWS Region
+                AWS 区域
               </label>
               <Input
                 value={idcRegion}
@@ -273,7 +273,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
                 className="font-mono text-sm"
               />
               <p className="text-xs text-text-muted mt-1">
-                AWS region for your Identity Center (default: us-east-1)
+                Identity Center 的 AWS 区域（默认：us-east-1）
               </p>
             </div>
 
@@ -283,10 +283,10 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
 
             <div className="flex gap-2">
               <Button onClick={handleIdcContinue} fullWidth>
-                Continue
+                继续
               </Button>
               <Button onClick={handleBack} variant="ghost" fullWidth>
-                Back
+                返回
               </Button>
             </div>
           </div>
@@ -299,8 +299,8 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
               <div className="flex gap-2">
                 <span className="material-symbols-outlined text-blue-600 dark:text-blue-400">info</span>
                 <p className="text-sm text-blue-800 dark:text-blue-200">
-                  Paste a long-lived Kiro/CodeWhisperer API key. It is validated
-                  against AWS and stored directly as a bearer credential (no refresh).
+                  粘贴长期有效的 Kiro/CodeWhisperer API key。它会在 AWS 上验证
+                  并直接存储为 bearer 凭证（无需刷新）。
                 </p>
               </div>
             </div>
@@ -312,14 +312,14 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
               <Input
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Paste your Kiro API key..."
+                placeholder="粘贴你的 Kiro API key..."
                 className="font-mono text-sm"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">
-                AWS Region
+                AWS 区域
               </label>
               <Input
                 value={apiKeyRegion}
@@ -328,7 +328,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
                 className="font-mono text-sm"
               />
               <p className="text-xs text-text-muted mt-1">
-                AWS region for the key (default: us-east-1)
+                该 key 的 AWS 区域（默认：us-east-1）
               </p>
             </div>
 
@@ -340,10 +340,10 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
 
             <div className="flex gap-2">
               <Button onClick={handleApiKeyImport} fullWidth disabled={importing || !apiKey.trim()}>
-                {importing ? "Validating..." : "Add API Key"}
+                {importing ? "验证中..." : "添加 API Key"}
               </Button>
               <Button onClick={handleBack} variant="ghost" fullWidth>
-                Back
+                返回
               </Button>
             </div>
           </div>
@@ -357,10 +357,10 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
                 <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">info</span>
                 <div className="flex-1 text-sm">
                   <p className="font-medium text-amber-900 dark:text-amber-100 mb-1">
-                    Manual Callback Required
+                    需要手动回调
                   </p>
                   <p className="text-amber-800 dark:text-amber-200">
-                    After login, you&apos;ll need to copy the callback URL from your browser and paste it back here.
+                    登录后，你需要从浏览器复制回调 URL 并粘贴回此处。
                   </p>
                 </div>
               </div>
@@ -368,10 +368,10 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
 
             <div className="flex gap-2">
               <Button onClick={() => handleSocialLogin("google")} fullWidth>
-                Continue with Google
+                使用 Google 继续
               </Button>
               <Button onClick={handleBack} variant="ghost" fullWidth>
-                Back
+                返回
               </Button>
             </div>
           </div>
@@ -385,10 +385,10 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
                 <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">info</span>
                 <div className="flex-1 text-sm">
                   <p className="font-medium text-amber-900 dark:text-amber-100 mb-1">
-                    Manual Callback Required
+                    需要手动回调
                   </p>
                   <p className="text-amber-800 dark:text-amber-200">
-                    After login, you&apos;ll need to copy the callback URL from your browser and paste it back here.
+                    登录后，你需要从浏览器复制回调 URL 并粘贴回此处。
                   </p>
                 </div>
               </div>
@@ -396,10 +396,10 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
 
             <div className="flex gap-2">
               <Button onClick={() => handleSocialLogin("github")} fullWidth>
-                Continue with GitHub
+                使用 GitHub 继续
               </Button>
               <Button onClick={handleBack} variant="ghost" fullWidth>
-                Back
+                返回
               </Button>
             </div>
           </div>
@@ -416,9 +416,9 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
                     progress_activity
                   </span>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Auto-detecting token...</h3>
+                <h3 className="text-lg font-semibold mb-2">自动检测 token 中...</h3>
                 <p className="text-sm text-text-muted">
-                  Reading from AWS SSO cache
+                  正在读取 AWS SSO 缓存
                 </p>
               </div>
             )}
@@ -432,7 +432,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
                     <div className="flex gap-2">
                       <span className="material-symbols-outlined text-green-600 dark:text-green-400">check_circle</span>
                       <p className="text-sm text-green-800 dark:text-green-200">
-                        Token auto-detected from Kiro IDE successfully!
+                        成功从 Kiro IDE 自动检测到 Token！
                       </p>
                     </div>
                   </div>
@@ -444,7 +444,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
                     <div className="flex gap-2">
                       <span className="material-symbols-outlined text-blue-600 dark:text-blue-400">info</span>
                       <p className="text-sm text-blue-800 dark:text-blue-200">
-                        Kiro IDE not detected. Please paste your refresh token manually.
+                        未检测到 Kiro IDE。请手动粘贴你的 refresh token。
                       </p>
                     </div>
                   </div>
@@ -457,7 +457,7 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
                   <Input
                     value={refreshToken}
                     onChange={(e) => setRefreshToken(e.target.value)}
-                    placeholder="Token will be auto-filled..."
+                    placeholder="Token 将自动填充..."
                     className="font-mono text-sm"
                   />
                 </div>
@@ -470,10 +470,10 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
 
                 <div className="flex gap-2">
                   <Button onClick={handleImportToken} fullWidth disabled={importing || !refreshToken.trim()}>
-                    {importing ? "Importing..." : "Import Token"}
+                    {importing ? "导入中..." : "导入 Token"}
                   </Button>
                   <Button onClick={handleBack} variant="ghost" fullWidth>
-                    Back
+                    返回
                   </Button>
                 </div>
               </>

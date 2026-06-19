@@ -57,11 +57,11 @@ export default function ChangelogModal({ isOpen, onClose }) {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-3 border-b border-black/5 dark:border-white/5">
-          <h2 className="text-lg font-semibold text-text-main">Change Log</h2>
+          <h2 className="text-lg font-semibold text-text-main">更新日志</h2>
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg text-text-muted hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-            aria-label="Close"
+            aria-label="关闭"
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
@@ -72,11 +72,11 @@ export default function ChangelogModal({ isOpen, onClose }) {
           {loading && (
             <div className="flex items-center justify-center py-10 text-text-muted">
               <span className="material-symbols-outlined animate-spin mr-2">progress_activity</span>
-              Loading...
+              加载中...
             </div>
           )}
           {error && (
-            <div className="text-red-500 py-4">Failed to load changelog: {error}</div>
+            <div className="text-red-500 py-4">加载更新日志失败：{error}</div>
           )}
           {!loading && !error && html && (
             <div

@@ -19,10 +19,10 @@ import UsageChart from "@/app/(dashboard)/dashboard/usage/components/UsageChart"
 
 function timeAgo(timestamp) {
   const diff = Math.floor((Date.now() - new Date(timestamp)) / 1000);
-  if (diff < 60) return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  return `${Math.floor(diff / 86400)}d ago`;
+  if (diff < 60) return `${diff} 秒前`;
+  if (diff < 3600) return `${Math.floor(diff / 60)} 分钟前`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} 小时前`;
+  return `${Math.floor(diff / 86400)} 天前`;
 }
 
 // Auto-update time display every second without re-rendering parent
@@ -42,20 +42,20 @@ function RecentRequests({ requests = [] }) {
     <Card className="flex min-w-0 flex-col overflow-hidden" padding="sm" style={{ height: 480 }}>
       {/* Header */}
       <div className="px-1 py-2 border-b border-border shrink-0">
-        <span className="text-xs font-semibold text-text-muted uppercase tracking-wide">Recent Requests</span>
+        <span className="text-xs font-semibold text-text-muted uppercase tracking-wide">最近请求</span>
       </div>
 
       {!requests.length ? (
-        <div className="flex-1 flex items-center justify-center text-text-muted text-sm">No requests yet.</div>
+        <div className="flex-1 flex items-center justify-center text-text-muted text-sm">暂无请求。</div>
       ) : (
         <div className="flex-1 overflow-y-auto">
           <table className="w-full min-w-[300px] border-collapse text-xs">
             <thead className="sticky top-0 bg-bg z-10">
               <tr className="border-b border-border">
                 <th className="py-1.5 text-left font-semibold text-text-muted w-2"></th>
-                <th className="py-1.5 text-left font-semibold text-text-muted">Model</th>
-                <th className="py-1.5 text-right font-semibold text-text-muted whitespace-nowrap">In / Out</th>
-                <th className="py-1.5 text-right font-semibold text-text-muted">When</th>
+                <th className="py-1.5 text-left font-semibold text-text-muted">模型</th>
+                <th className="py-1.5 text-right font-semibold text-text-muted whitespace-nowrap">输入 / 输出</th>
+                <th className="py-1.5 text-right font-semibold text-text-muted">时间</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/50">
@@ -106,11 +106,11 @@ function sortData(dataMap, pendingMap = {}, sortBy, sortOrder) {
 
 function getGroupKey(item, keyField) {
   switch (keyField) {
-    case "rawModel": return item.rawModel || "Unknown Model";
-    case "accountName": return item.accountName || `Account ${item.connectionId?.slice(0, 8)}...` || "Unknown Account";
-    case "keyName": return item.keyName || "Unknown Key";
-    case "endpoint": return item.endpoint || "Unknown Endpoint";
-    default: return item[keyField] || "Unknown";
+    case "rawModel": return item.rawModel || "未知模型";
+    case "accountName": return item.accountName || `账号 ${item.connectionId?.slice(0, 8)}...` || "未知账号";
+    case "keyName": return item.keyName || "未知密钥";
+    case "endpoint": return item.endpoint || "未知端点";
+    default: return item[keyField] || "未知";
   }
 }
 
@@ -144,49 +144,49 @@ function groupDataByKey(data, keyField) {
 }
 
 const MODEL_COLUMNS = [
-  { field: "rawModel", label: "Model" },
-  { field: "provider", label: "Provider" },
-  { field: "requests", label: "Requests", align: "right" },
-  { field: "lastUsed", label: "Last Used", align: "right" },
+  { field: "rawModel", label: "模型" },
+  { field: "provider", label: "提供商" },
+  { field: "requests", label: "请求数", align: "right" },
+  { field: "lastUsed", label: "最后使用", align: "right" },
 ];
 
 const ACCOUNT_COLUMNS = [
-  { field: "rawModel", label: "Model" },
-  { field: "provider", label: "Provider" },
-  { field: "accountName", label: "Account" },
-  { field: "requests", label: "Requests", align: "right" },
-  { field: "lastUsed", label: "Last Used", align: "right" },
+  { field: "rawModel", label: "模型" },
+  { field: "provider", label: "提供商" },
+  { field: "accountName", label: "账号" },
+  { field: "requests", label: "请求数", align: "right" },
+  { field: "lastUsed", label: "最后使用", align: "right" },
 ];
 
 const API_KEY_COLUMNS = [
-  { field: "keyName", label: "API Key Name" },
-  { field: "rawModel", label: "Model" },
-  { field: "provider", label: "Provider" },
-  { field: "requests", label: "Requests", align: "right" },
-  { field: "lastUsed", label: "Last Used", align: "right" },
+  { field: "keyName", label: "API 密钥名称" },
+  { field: "rawModel", label: "模型" },
+  { field: "provider", label: "提供商" },
+  { field: "requests", label: "请求数", align: "right" },
+  { field: "lastUsed", label: "最后使用", align: "right" },
 ];
 
 const ENDPOINT_COLUMNS = [
-  { field: "endpoint", label: "Endpoint" },
-  { field: "rawModel", label: "Model" },
-  { field: "provider", label: "Provider" },
-  { field: "requests", label: "Requests", align: "right" },
-  { field: "lastUsed", label: "Last Used", align: "right" },
+  { field: "endpoint", label: "端点" },
+  { field: "rawModel", label: "模型" },
+  { field: "provider", label: "提供商" },
+  { field: "requests", label: "请求数", align: "right" },
+  { field: "lastUsed", label: "最后使用", align: "right" },
 ];
 
 const TABLE_OPTIONS = [
-  { value: "model", label: "Usage by Model" },
-  { value: "account", label: "Usage by Account" },
-  { value: "apiKey", label: "Usage by API Key" },
-  { value: "endpoint", label: "Usage by Endpoint" },
+  { value: "model", label: "按模型统计" },
+  { value: "account", label: "按账号统计" },
+  { value: "apiKey", label: "按 API 密钥统计" },
+  { value: "endpoint", label: "按端点统计" },
 ];
 
 const PERIODS = [
-  { value: "today", label: "Today" },
-  { value: "24h", label: "24h" },
-  { value: "7d", label: "7D" },
-  { value: "30d", label: "30D" },
-  { value: "60d", label: "60D" },
+  { value: "today", label: "今天" },
+  { value: "24h", label: "24小时" },
+  { value: "7d", label: "7天" },
+  { value: "30d", label: "30天" },
+  { value: "60d", label: "60天" },
 ];
 
 export default function UsageStats({ period: periodProp, setPeriod: setPeriodProp, hidePeriodSelector = false } = {}) {
@@ -315,7 +315,7 @@ export default function UsageStats({ period: periodProp, setPeriod: setPeriodPro
           columns: MODEL_COLUMNS,
           groupedData: groupDataByKey(sortData(stats.byModel, pendingMap, sortBy, sortOrder), "rawModel"),
           storageKey: "usage-stats:expanded-models",
-          emptyMessage: "No usage recorded yet.",
+          emptyMessage: "暂无使用记录。",
           renderSummaryCells: (group) => (
             <>
               <td className="px-6 py-3 text-text-muted">—</td>
@@ -348,7 +348,7 @@ export default function UsageStats({ period: periodProp, setPeriod: setPeriodPro
           columns: ACCOUNT_COLUMNS,
           groupedData: groupDataByKey(sortData(stats.byAccount, pendingMap, sortBy, sortOrder), "accountName"),
           storageKey: "usage-stats:expanded-accounts",
-          emptyMessage: "No account-specific usage recorded yet.",
+          emptyMessage: "暂无账号相关使用记录。",
           renderSummaryCells: (group) => (
             <>
               <td className="px-6 py-3 text-text-muted">—</td>
@@ -373,7 +373,7 @@ export default function UsageStats({ period: periodProp, setPeriod: setPeriodPro
           columns: API_KEY_COLUMNS,
           groupedData: groupDataByKey(sortData(stats.byApiKey, {}, sortBy, sortOrder), "keyName"),
           storageKey: "usage-stats:expanded-apikeys",
-          emptyMessage: "No API key usage recorded yet.",
+          emptyMessage: "暂无 API 密钥使用记录。",
           renderSummaryCells: (group) => (
             <>
               <td className="px-6 py-3 text-text-muted">—</td>
@@ -399,7 +399,7 @@ export default function UsageStats({ period: periodProp, setPeriod: setPeriodPro
           columns: ENDPOINT_COLUMNS,
           groupedData: groupDataByKey(sortData(stats.byEndpoint, {}, sortBy, sortOrder), "endpoint"),
           storageKey: "usage-stats:expanded-endpoints",
-          emptyMessage: "No endpoint usage recorded yet.",
+          emptyMessage: "暂无端点使用记录。",
           renderSummaryCells: (group) => (
             <>
               <td className="px-6 py-3 text-text-muted">—</td>
@@ -422,7 +422,7 @@ export default function UsageStats({ period: periodProp, setPeriod: setPeriodPro
     }
   }, [stats, tableView, sortBy, sortOrder]);
 
-  if (!stats && !loading) return <div className="text-text-muted">Failed to load usage statistics.</div>;
+  if (!stats && !loading) return <div className="text-text-muted">加载用量统计失败。</div>;
 
   const spinner = (
     <div className="flex items-center justify-center py-12 text-text-muted">
@@ -490,13 +490,13 @@ export default function UsageStats({ period: periodProp, setPeriod: setPeriodPro
               onClick={() => setViewMode("costs")}
               className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === "costs" ? "bg-primary text-white shadow-sm" : "text-text-muted hover:text-text hover:bg-bg-hover"}`}
             >
-              Costs
+              费用
             </button>
             <button
               onClick={() => setViewMode("tokens")}
               className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === "tokens" ? "bg-primary text-white shadow-sm" : "text-text-muted hover:text-text hover:bg-bg-hover"}`}
             >
-              Tokens
+              Token
             </button>
           </div>
         </div>

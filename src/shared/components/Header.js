@@ -28,7 +28,7 @@ const getPageInfo = (pathname) => {
       title: provider?.name || providerId,
       description: "",
       breadcrumbs: [
-        { label: "Media Providers", href: `/dashboard/media-providers/${kindId}` },
+        { label: "媒体提供商", href: `/dashboard/media-providers/${kindId}` },
         { label: kindConfig?.label || kindId, href: `/dashboard/media-providers/${kindId}` },
         { label: provider?.name || providerId, image: `/providers/${providerId}.png` },
       ],
@@ -42,7 +42,7 @@ const getPageInfo = (pathname) => {
     const kindConfig = MEDIA_PROVIDER_KINDS.find((k) => k.id === kindId);
     return {
       title: kindConfig?.label || kindId,
-      description: `Manage your ${kindConfig?.label || kindId} providers`,
+      description: `管理 ${kindConfig?.label || kindId} 提供商`,
       icon: kindConfig?.icon || "perm_media",
       breadcrumbs: [],
     };
@@ -59,7 +59,7 @@ const getPageInfo = (pathname) => {
         title: providerInfo.name,
         description: "",
         breadcrumbs: [
-          { label: "Providers", href: "/dashboard/providers" },
+          { label: "提供商", href: "/dashboard/providers" },
           {
             label: providerInfo.name,
             image: `/providers/${providerInfo.id}.png`,
@@ -72,14 +72,14 @@ const getPageInfo = (pathname) => {
   if (pathname.includes("/providers") && !pathname.includes("/media-providers"))
     return {
       title: "Providers",
-      description: "Manage your AI provider connections",
+      description: "管理 AI 提供商连接",
       icon: "dns",
       breadcrumbs: [],
     };
   if (pathname.includes("/combos"))
     return {
       title: "Combos",
-      description: "Model combos with fallback",
+      description: "带故障转移的模型组合",
       icon: "layers",
       breadcrumbs: [],
     };
@@ -87,84 +87,84 @@ const getPageInfo = (pathname) => {
     return {
       title: "Usage & Analytics",
       description:
-        "Monitor your API usage, token consumption, and request logs",
+        "监控 API 用量、Token 消耗和请求日志",
       icon: "bar_chart",
       breadcrumbs: [],
     };
   if (pathname.includes("/auth-files"))
     return {
       title: "Auth Files",
-      description: "Map provider credentials stored in the local database",
+      description: "映射本地数据库中存储的提供商凭证",
       icon: "vpn_key",
       breadcrumbs: [],
     };
   if (pathname.includes("/quota"))
     return {
       title: "Quota Tracker",
-      description: "Track and manage your API quota limits",
+      description: "追踪和管理 API 额度限制",
       icon: "data_usage",
       breadcrumbs: [],
     };
   if (pathname.includes("/mitm"))
     return {
       title: "MITM Proxy",
-      description: "Intercept CLI tool traffic and route through 9Router",
+      description: "拦截 CLI 工具流量并通过 9Router 路由",
       icon: "security",
       breadcrumbs: [],
     };
   if (pathname.includes("/cli-tools"))
     return {
       title: "CLI Tools",
-      description: "Configure CLI tools",
+      description: "配置 CLI 工具",
       icon: "terminal",
       breadcrumbs: [],
     };
   if (pathname.includes("/proxy-pools"))
     return {
       title: "Proxy Pools",
-      description: "Manage your proxy pool configurations",
+      description: "管理代理池配置",
       icon: "lan",
       breadcrumbs: [],
     };
   if (pathname.includes("/skills"))
     return {
       title: "Agent Skills",
-      description: "Copy a link and paste to your AI to use 9Router — no install needed",
+      description: "复制链接粘贴到 AI 即可使用 9Router — 无需安装",
       icon: "extension",
       breadcrumbs: [],
     };
   if (pathname.includes("/endpoint"))
     return {
       title: "Endpoint",
-      description: "API endpoint configuration",
+      description: "API 端点配置",
       icon: "api",
       breadcrumbs: [],
     };
   if (pathname.includes("/profile"))
     return {
       title: "Settings",
-      description: "Manage your preferences",
+      description: "管理偏好设置",
       icon: "settings",
       breadcrumbs: [],
     };
   if (pathname.includes("/translator"))
     return {
       title: "Translator",
-      description: "Debug translation flow between formats",
+      description: "调试格式之间的翻译流程",
       icon: "translate",
       breadcrumbs: [],
     };
   if (pathname.includes("/console-log"))
     return {
       title: "Console Log",
-      description: "Live server console output",
+      description: "实时服务器控制台输出",
       icon: "monitor",
       breadcrumbs: [],
     };
   if (pathname === "/dashboard")
     return {
       title: "Endpoint",
-      description: "API endpoint configuration",
+      description: "API 端点配置",
       icon: "api",
       breadcrumbs: [],
     };
@@ -310,10 +310,10 @@ export default function Header({ onMenuClick, showMenuButton = true }) {
         <button
           onClick={() => setDonateOpen(true)}
           className="flex items-center gap-1.5 px-3 h-8 rounded-lg border border-pink-500/30 bg-pink-500/10 text-pink-600 dark:text-pink-400 hover:bg-pink-500/20 transition-colors text-sm font-medium"
-          aria-label="Donate"
+          aria-label="捐赠"
         >
           <span className="material-symbols-outlined text-[18px]">volunteer_activism</span>
-          <span className="hidden sm:inline">Donate</span>
+          <span className="hidden sm:inline">捐赠</span>
         </button>
         <ThemeToggle />
         <HeaderLanguage />
@@ -349,7 +349,7 @@ function HeaderSearch() {
           type="button"
           onClick={() => setQuery("")}
           className="absolute right-1 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-main p-0.5 rounded"
-          aria-label="Clear search"
+          aria-label="清除搜索"
         >
           <span className="material-symbols-outlined text-[16px]">close</span>
         </button>

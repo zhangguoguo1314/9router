@@ -48,7 +48,7 @@ export default function GitLabAuthModal({ isOpen, providerInfo, onSuccess, onClo
 
   const handleOAuthStart = () => {
     if (!clientId.trim()) {
-      setError("Client ID is required");
+      setError("Client ID 必填");
       return;
     }
     setError(null);
@@ -58,7 +58,7 @@ export default function GitLabAuthModal({ isOpen, providerInfo, onSuccess, onClo
 
   const handlePATSubmit = async () => {
     if (!pat.trim()) {
-      setError("Personal Access Token is required");
+      setError("Personal Access Token 必填");
       return;
     }
     setLoading(true);
@@ -70,7 +70,7 @@ export default function GitLabAuthModal({ isOpen, providerInfo, onSuccess, onClo
         body: JSON.stringify({ token: pat.trim(), baseUrl: baseUrl.trim() || GITLAB_COM }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Authentication failed");
+      if (!res.ok) throw new Error(data.error || "认证失败");
       onSuccess?.();
       handleClose();
     } catch (err) {
@@ -97,13 +97,13 @@ export default function GitLabAuthModal({ isOpen, providerInfo, onSuccess, onClo
   }
 
   return (
-    <Modal isOpen={isOpen} title="Connect GitLab Duo" onClose={handleClose} size="lg">
+    <Modal isOpen={isOpen} title="连接 GitLab Duo" onClose={handleClose} size="lg">
       <div className="flex flex-col gap-4">
         {/* Mode selection */}
         {!mode && (
           <>
             <p className="text-sm text-text-muted">
-              Choose how to authenticate with GitLab Duo:
+              选择 GitLab Duo 的认证方式：
             </p>
             <div className="grid grid-cols-2 gap-3">
               <button
@@ -112,8 +112,8 @@ export default function GitLabAuthModal({ isOpen, providerInfo, onSuccess, onClo
               >
                 <span className="material-symbols-outlined text-2xl text-primary">lock_open</span>
                 <div>
-                  <p className="text-sm font-medium">OAuth App</p>
-                  <p className="text-xs text-text-muted">Use a GitLab OAuth application</p>
+                  <p className="text-sm font-medium">OAuth 应用</p>
+                  <p className="text-xs text-text-muted">使用 GitLab OAuth 应用</p>
                 </div>
               </button>
               <button
@@ -123,7 +123,7 @@ export default function GitLabAuthModal({ isOpen, providerInfo, onSuccess, onClo
                 <span className="material-symbols-outlined text-2xl text-primary">key</span>
                 <div>
                   <p className="text-sm font-medium">Personal Access Token</p>
-                  <p className="text-xs text-text-muted">Use a GitLab PAT with api scope</p>
+                  <p className="text-xs text-text-muted">使用带 api 范围的 GitLab PAT</p>
                 </div>
               </button>
             </div>
@@ -134,23 +134,23 @@ export default function GitLabAuthModal({ isOpen, providerInfo, onSuccess, onClo
         {mode === "oauth" && (
           <>
             <p className="text-xs text-text-muted">
-              Create an OAuth app at{" "}
+              在{" "}
               <a href={`${baseUrl.trim() || GITLAB_COM}/-/profile/applications`} target="_blank" rel="noreferrer" className="text-primary underline">
-                GitLab Applications
+                GitLab 应用
               </a>{" "}
-              with redirect URI{" "}
+              创建 OAuth 应用，重定向 URI 为{" "}
               <code className="bg-sidebar px-1 rounded text-xs">{getRedirectUri()}</code>
             </p>
             <Input label="GitLab Base URL" value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} placeholder={GITLAB_COM} />
-            <Input label="Client ID" value={clientId} onChange={(e) => setClientId(e.target.value)} placeholder="Your OAuth application client ID" />
-            <Input label="Client Secret (optional for PKCE)" value={clientSecret} onChange={(e) => setClientSecret(e.target.value)} placeholder="Leave empty for public PKCE app" />
+            <Input label="Client ID" value={clientId} onChange={(e) => setClientId(e.target.value)} placeholder="你的 OAuth 应用 client ID" />
+            <Input label="Client Secret（PKCE 可选）" value={clientSecret} onChange={(e) => setClientSecret(e.target.value)} placeholder="公开 PKCE 应用留空" />
             {error && <p className="text-sm text-red-500">{error}</p>}
             <div className="flex gap-2">
               <Button onClick={handleOAuthStart} fullWidth disabled={!clientId.trim()}>
-                Authorize
+                授权
               </Button>
               <Button onClick={() => { setMode(null); setError(null); }} variant="ghost" fullWidth>
-                Back
+                返回
               </Button>
             </div>
           </>
@@ -160,23 +160,23 @@ export default function GitLabAuthModal({ isOpen, providerInfo, onSuccess, onClo
         {mode === "pat" && (
           <>
             <p className="text-xs text-text-muted">
-              Create a PAT at{" "}
+              在{" "}
               <a href={`${baseUrl.trim() || GITLAB_COM}/-/user_settings/personal_access_tokens`} target="_blank" rel="noreferrer" className="text-primary underline">
                 GitLab Access Tokens
               </a>{" "}
-              with scopes: <code className="bg-sidebar px-1 rounded text-xs">api</code>,{" "}
-              <code className="bg-sidebar px-1 rounded text-xs">read_user</code>, and{" "}
-              <code className="bg-sidebar px-1 rounded text-xs">ai_features</code>.
+              创建 PAT，范围需包含：<code className="bg-sidebar px-1 rounded text-xs">api</code>、{" "}
+              <code className="bg-sidebar px-1 rounded text-xs">read_user</code> 和{" "}
+              <code className="bg-sidebar px-1 rounded text-xs">ai_features</code>。
             </p>
             <Input label="GitLab Base URL" value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} placeholder={GITLAB_COM} />
             <Input label="Personal Access Token" value={pat} onChange={(e) => setPat(e.target.value)} placeholder="glpat-xxxxxxxxxxxxxxxxxxxx" type="password" />
             {error && <p className="text-sm text-red-500">{error}</p>}
             <div className="flex gap-2">
               <Button onClick={handlePATSubmit} fullWidth disabled={!pat.trim() || loading} loading={loading}>
-                Connect
+                连接
               </Button>
               <Button onClick={() => { setMode(null); setError(null); }} variant="ghost" fullWidth>
-                Back
+                返回
               </Button>
             </div>
           </>

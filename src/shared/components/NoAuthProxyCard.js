@@ -62,18 +62,18 @@ export default function NoAuthProxyCard({ providerId }) {
           <span className="material-symbols-outlined text-[20px]">lock_open</span>
         </div>
         <div className="flex-1">
-          <p className="text-sm font-medium">No authentication required</p>
-          <p className="text-xs text-text-muted">This provider is ready to use. Optionally route requests through a proxy pool to bypass IP-based limits.</p>
+          <p className="text-sm font-medium">无需认证</p>
+          <p className="text-xs text-text-muted">此提供商可直接使用。可选通过代理池路由请求以绕过基于 IP 的限制。</p>
         </div>
-        {savedFlash && <Badge variant="success" size="sm">Saved</Badge>}
+        {savedFlash && <Badge variant="success" size="sm">已保存</Badge>}
       </div>
       <Select
-        label="Proxy Pool"
+        label="代理池"
         value={proxyPoolId}
         onChange={(e) => handleChange(e.target.value)}
         disabled={saving}
         options={[
-          { value: NONE_PROXY_POOL_VALUE, label: "None (direct)" },
+          { value: NONE_PROXY_POOL_VALUE, label: "无（直连）" },
           ...proxyPools.map((pool) => ({ value: pool.id, label: pool.name })),
         ]}
       />

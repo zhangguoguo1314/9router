@@ -4,20 +4,20 @@ import Card from "./Card";
 
 // Only show fields user actually cares about
 const FIELD_SCHEMA = {
-  mode:             { label: "Mode",       format: (v) => v },
-  defaultModel:     { label: "Model",      format: (v) => v, mono: true },
-  baseUrl:          { label: "Endpoint",   format: (v) => v, isLink: true, mono: true },
-  costPerQuery:     { label: "Cost / call", format: (v) => v === 0 ? "Free" : `$${v.toFixed(4)}` },
-  pricingUrl:       { label: "Pricing",    format: () => "View pricing", isLink: true },
-  freeTier:         { label: "Free tier",  format: (v) => v },
-  freeMonthlyQuota: { label: "Free quota",  format: (v) => v === 0 ? "—" : v >= 999999 ? "Unlimited" : `${v.toLocaleString()} / mo` },
-  searchTypes:      { label: "Types",      format: (v) => v.join(", ") },
-  formats:          { label: "Formats",    format: (v) => v.join(", ") },
-  maxMaxResults:    { label: "Max results", format: (v) => v },
-  maxCharacters:    { label: "Max chars",  format: (v) => v.toLocaleString() },
+  mode:             { label: "模式",       format: (v) => v },
+  defaultModel:     { label: "模型",      format: (v) => v, mono: true },
+  baseUrl:          { label: "端点",   format: (v) => v, isLink: true, mono: true },
+  costPerQuery:     { label: "单次费用", format: (v) => v === 0 ? "免费" : `$${v.toFixed(4)}` },
+  pricingUrl:       { label: "定价",    format: () => "查看定价", isLink: true },
+  freeTier:         { label: "免费层级",  format: (v) => v },
+  freeMonthlyQuota: { label: "免费额度",  format: (v) => v === 0 ? "—" : v >= 999999 ? "无限制" : `${v.toLocaleString()} / 月` },
+  searchTypes:      { label: "类型",      format: (v) => v.join(", ") },
+  formats:          { label: "格式",    format: (v) => v.join(", ") },
+  maxMaxResults:    { label: "最大结果数", format: (v) => v },
+  maxCharacters:    { label: "最大字符数",  format: (v) => v.toLocaleString() },
 };
 
-export default function ProviderInfoCard({ config, provider, title = "Provider Info" }) {
+export default function ProviderInfoCard({ config, provider, title = "提供商信息" }) {
   if (!config) return null;
 
   const rows = Object.entries(FIELD_SCHEMA)
@@ -46,7 +46,7 @@ export default function ProviderInfoCard({ config, provider, title = "Provider I
             className="text-xs text-primary hover:underline inline-flex items-center gap-1"
           >
             <span className="material-symbols-outlined text-sm">open_in_new</span>
-            Get API Key
+            获取 API Key
           </a>
         )}
       </div>
@@ -72,7 +72,7 @@ export default function ProviderInfoCard({ config, provider, title = "Provider I
         ))}
         {noticeText && (
           <div className="flex items-start gap-3 min-w-0 sm:col-span-2">
-            <span className="text-xs text-text-muted w-28 shrink-0 mt-0.5">Notice</span>
+            <span className="text-xs text-text-muted w-28 shrink-0 mt-0.5">注意</span>
             <span className="text-sm text-text-main leading-relaxed">{noticeText}</span>
           </div>
         )}
