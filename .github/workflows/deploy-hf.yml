@@ -26,8 +26,8 @@ jobs:
           if [ "$STATUS" = "200" ]; then
             echo "Space already exists"
           else
-            echo "Creating space..."
-            RESP=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST "https://huggingface.co/api/spaces" \
+            echo "Creating space via /api/repos/create ..."
+            RESP=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST "https://huggingface.co/api/repos/create" \
               -H "Authorization: Bearer $HF_TOKEN" \
               -H "Content-Type: application/json" \
               -d '{"type":"space","name":"9router","sdk":"docker","private":false}')
