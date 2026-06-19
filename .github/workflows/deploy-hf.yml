@@ -17,14 +17,18 @@ jobs:
           git config --global user.name "github-actions[bot]"
 
       - name: 创建 HF Space（如果不存在）
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          echo "Token prefix: ${HF_TOKEN:0:7}..."
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://huggingface.co/api/spaces/zhangguoguo1314/9router")
+          echo "Check status: $STATUS"
           if [ "$STATUS" = "200" ]; then
             echo "Space already exists"
           else
             echo "Creating space..."
             RESP=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST "https://huggingface.co/api/spaces" \
-              -H "Authorization: Bearer ${{ secrets.HF_TOKEN }}" \
+              -H "Authorization: Bearer $HF_TOKEN" \
               -H "Content-Type: application/json" \
               -d '{"name":"9router","sdk":"docker","private":false}')
             echo "Create response: $RESP"
