@@ -21,16 +21,16 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           echo "Token prefix: ${HF_TOKEN:0:7}..."
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://huggingface.co/api/spaces/zhangguoguo1314/9router")
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $HF_TOKEN" "https://huggingface.co/api/spaces/zhangguoguo1314/9router")
           echo "Check status: $STATUS"
           if [ "$STATUS" = "200" ]; then
             echo "Space already exists"
           else
             echo "Creating space..."
-            RESP=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST "https://huggingface.co/api/spaces" \
+            RESP=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST "https://huggingface.co/api/spaces/zhangguoguo1314/9router" \
               -H "Authorization: Bearer $HF_TOKEN" \
               -H "Content-Type: application/json" \
-              -d '{"name":"9router","sdk":"docker","private":false}')
+              -d '{"sdk":"docker","private":false}')
             echo "Create response: $RESP"
             sleep 10
           fi
