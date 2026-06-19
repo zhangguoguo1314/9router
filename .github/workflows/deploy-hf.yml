@@ -17,7 +17,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
 
       - name: 克隆 HF Space 仓库
-        run: git clone https://x:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/youqisi/gnmss hf-space
+        run: git clone https://x:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/zhangguoguo1314/9router hf-space
 
       - name: 复制文件到 HF Space
         run: |
@@ -42,4 +42,4 @@ jobs:
       - name: 推送到 Hugging Face
         run: |
           cd hf-space
-          git push https://x:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/youqisi/gnmss main
+          git push https://x:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/zhangguoguo1314/9router main
