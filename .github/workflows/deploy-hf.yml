@@ -16,6 +16,20 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
+      - name: 创建 HF Space（如果不存在）
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://huggingface.co/api/spaces/zhangguoguo1314/9router")
+          if [ "$STATUS" = "200" ]; then
+            echo "Space already exists"
+          else
+            echo "Creating space..."
+            curl -s -X POST "https://huggingface.co/api/spaces" \
+              -H "Authorization: Bearer ${{ secrets.HF_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d '{"name":"9router","sdk":"docker","private":false}'
+            sleep 5
+          fi
+
       - name: 克隆 HF Space 仓库
         run: git clone https://x:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/zhangguoguo1314/9router hf-space
 
