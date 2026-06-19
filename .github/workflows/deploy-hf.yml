@@ -27,10 +27,10 @@ jobs:
             echo "Space already exists"
           else
             echo "Creating space..."
-            RESP=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST "https://huggingface.co/api/spaces/zhangguoguo1314/9router" \
+            RESP=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST "https://huggingface.co/api/spaces" \
               -H "Authorization: Bearer $HF_TOKEN" \
               -H "Content-Type: application/json" \
-              -d '{"sdk":"docker","private":false}')
+              -d '{"type":"space","name":"9router","sdk":"docker","private":false}')
             echo "Create response: $RESP"
             sleep 10
           fi
