@@ -23,11 +23,12 @@ jobs:
             echo "Space already exists"
           else
             echo "Creating space..."
-            curl -s -X POST "https://huggingface.co/api/spaces" \
+            RESP=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST "https://huggingface.co/api/spaces" \
               -H "Authorization: Bearer ${{ secrets.HF_TOKEN }}" \
               -H "Content-Type: application/json" \
-              -d '{"name":"9router","sdk":"docker","private":false}'
-            sleep 5
+              -d '{"name":"9router","sdk":"docker","private":false}')
+            echo "Create response: $RESP"
+            sleep 10
           fi
 
       - name: 克隆 HF Space 仓库
