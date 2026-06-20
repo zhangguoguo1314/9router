@@ -36,7 +36,17 @@ jobs:
           fi
 
       - name: 克隆 HF Space 仓库
-        run: git clone https://x:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/youqisi/9router hf-space
+        run: |
+          for i in 1 2 3; do
+            echo "Attempt $i: cloning HF space..."
+            git clone "https://x:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/youqisi/9router" hf-space && break
+            echo "Clone failed, retrying in 5s..."
+            sleep 5
+          done
+          if [ ! -d "hf-space/.git" ]; then
+            echo "ERROR: Failed to clone HF space after 3 attempts"
+            exit 1
+          fi
 
       - name: 复制文件到 HF Space
         run: |
@@ -61,4 +71,9 @@ jobs:
       - name: 推送到 Hugging Face
         run: |
           cd hf-space
-          git push https://x:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/youqisi/9router main
+          for i in 1 2 3; do
+            echo "Attempt $i: pushing to HF..."
+            git push "https://x:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/youqisi/9router" main && break
+            echo "Push failed, retrying in 5s..."
+            sleep 5
+          done
