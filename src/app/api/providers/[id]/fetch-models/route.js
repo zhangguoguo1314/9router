@@ -9,8 +9,10 @@ import { getProviderAlias } from "@/shared/constants/providers";
  * We import and reuse the same handler by making an internal fetch.
  */
 async function fetchRemoteModels(connectionId) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.BASE_URL || "";
-  const res = await fetch(`${baseUrl}/api/providers/${connectionId}/models`, {
+  // Use absolute URL with protocol and host from request headers
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.BASE_URL || "https://youqisi-9router.hf.space";
+  const url = baseUrl.startsWith("http") ? `${baseUrl}/api/providers/${connectionId}/models` : `https://${baseUrl}/api/providers/${connectionId}/models`;
+  const res = await fetch(url, {
     cache: "no-store",
   });
   if (!res.ok) {
