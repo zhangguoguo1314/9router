@@ -3,6 +3,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { Button } from "@/shared/components";
+import FetchModelsModal from "./FetchModelsModal";
 function CompatibleModelRow({ modelId, fullModel, copied, onCopy, onDeleteAlias, onTest, testStatus, isTesting }) {
   const borderColor = testStatus === "ok"
     ? "border-green-500/40"
@@ -70,12 +71,14 @@ function CompatibleModelRow({ modelId, fullModel, copied, onCopy, onDeleteAlias,
   );
 }
 
-export default function CompatibleModelsSection({ providerStorageAlias, providerDisplayAlias, modelAliases, copied, onCopy, onSetAlias, onDeleteAlias, connections, isAnthropic }) {
+export default function CompatibleModelsSection({ providerStorageAlias, providerDisplayAlias, modelAliases, copied, onCopy, onSetAlias, onDeleteAlias, connections, isAnthropic, providerId }) {
   const [newModel, setNewModel] = useState("");
   const [adding, setAdding] = useState(false);
   const [importing, setImporting] = useState(false);
   const [testingModelId, setTestingModelId] = useState(null);
   const [modelTestResults, setModelTestResults] = useState({});
+  const [showFetchModelsModal, setShowFetchModelsModal] = useState(false);
+  const [fetchModelsConnectionId, setFetchModelsConnectionId] = useState(null);
 
   const handleTestModel = async (modelId) => {
     if (testingModelId) return;
@@ -205,6 +208,21 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
         <Button size="sm" variant="secondary" icon="download" onClick={handleImport} disabled={!canImport || importing}>
           {importing ? "Importing..." : "Import from /models"}
         </Button>
+        <Button
+          size="sm"
+          variant="secondary"
+          icon="cloud_download"
+          onClick={() => {
+            const activeConn = connections.find((c) => c.isActive !== false) || connections[0];
+            if (activeConn) {
+              setFetchModelsConnectionId(activeConn.id);
+              setShowFetchModelsModal(true);
+            }
+          }}
+          disabled={!canImport}
+        >
+          拉取模型
+        </Button>
       </div>
 
       {!canImport && (
@@ -230,6 +248,22 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
           ))}
         </div>
       )}
+
+      {/* Fetch Models Modal */}
+      <FetchModelsModal
+        isOpen={showFetchModelsModal}
+        onClose={() => setShowFetchModelsModal(false)}
+        providerId={providerId || providerStorageAlias}
+        connectionId={fetchModelsConnectionId || ""}
+        providerAlias={providerStorageAlias}
+        isCompatible={true}
+        onSave={async (result) => {
+          if (result.success) {
+            // Trigger refresh of aliases via onSetAlias callback pattern
+            // The parent page will handle refreshing via fetchAliases
+          }
+        }}
+      />
     </div>
   );
 }
@@ -247,4 +281,5 @@ CompatibleModelsSection.propTypes = {
     isActive: PropTypes.bool,
   })).isRequired,
   isAnthropic: PropTypes.bool,
+  providerId: PropTypes.string,
 };

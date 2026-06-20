@@ -19,6 +19,7 @@ import AddApiKeyModal from "./AddApiKeyModal";
 import EditCompatibleNodeModal from "./EditCompatibleNodeModal";
 import AddCustomModelModal from "./AddCustomModelModal";
 import BulkImportCodexModal from "./BulkImportCodexModal";
+import FetchModelsModal from "./FetchModelsModal";
 
 const ONE_BY_ONE_DELAY_MS = 1000;
 
@@ -62,6 +63,8 @@ export default function ProviderDetailPage() {
   const [disabledModelIds, setDisabledModelIds] = useState([]);
   const [confirmState, setConfirmState] = useState(null);
   const [showAgRiskModal, setShowAgRiskModal] = useState(false);
+  const [showFetchModelsModal, setShowFetchModelsModal] = useState(false);
+  const [fetchModelsConnectionId, setFetchModelsConnectionId] = useState(null);
   const [oneByOneRunning, setOneByOneRunning] = useState(false);
   const [oneByOneStopping, setOneByOneStopping] = useState(false);
   const [oneByOneCurrentConnectionId, setOneByOneCurrentConnectionId] = useState(null);
@@ -932,6 +935,7 @@ export default function ProviderDetailPage() {
           onDeleteAlias={handleDeleteAlias}
           connections={connections}
           isAnthropic={isAnthropicCompatible}
+          providerId={providerId}
         />
       );
     }
@@ -1017,6 +1021,21 @@ export default function ProviderDetailPage() {
           <span className="material-symbols-outlined text-sm">add</span>
           Add Model
         </button>
+
+        {/* Fetch models button — pull models from remote API */}
+        {connections.length > 0 && (
+          <button
+            onClick={() => {
+              const activeConn = connections.find((c) => c.isActive !== false) || connections[0];
+              setFetchModelsConnectionId(activeConn.id);
+              setShowFetchModelsModal(true);
+            }}
+            className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-blue-500/40 px-3 py-2 text-xs text-blue-600 dark:text-blue-400 transition-colors hover:border-blue-500 hover:bg-blue-500/5 sm:w-auto"
+          >
+            <span className="material-symbols-outlined text-sm">cloud_download</span>
+            拉取模型
+          </button>
+        )}
 
         {/* Import Qoder models button — only show for qoder provider */}
         {providerId === "qoder" && connections.some((conn) => conn.isActive !== false) && (
@@ -1590,6 +1609,22 @@ export default function ProviderDetailPage() {
           onClose={() => setShowAddCustomModel(false)}
         />
       )}
+
+      {/* Fetch Models Modal */}
+      <FetchModelsModal
+        isOpen={showFetchModelsModal}
+        onClose={() => setShowFetchModelsModal(false)}
+        providerId={providerId}
+        connectionId={fetchModelsConnectionId || ""}
+        providerAlias={providerStorageAlias}
+        isCompatible={isCompatible}
+        onSave={async (result) => {
+          if (result.success) {
+            await fetchAliases();
+            await fetchConnections();
+          }
+        }}
+      />
 
       {providerId === "codex" && (
         <BulkImportCodexModal
