@@ -50,6 +50,11 @@ jobs:
 
       - name: 复制文件到 HF Space
         run: |
+          echo "=== Current package.json version ==="
+          grep '"version"' package.json
+          echo "=== HF Space package.json version (before) ==="
+          grep '"version"' hf-space/package.json || echo "No package.json in HF Space"
+          
           cp Dockerfile.hf hf-space/Dockerfile
           cp package.json hf-space/
           cp next.config.mjs hf-space/
@@ -62,18 +67,33 @@ jobs:
           cp -r cli hf-space/
           cp -r scripts hf-space/
           cp -r skills hf-space/
+          
+          echo "=== HF Space package.json version (after) ==="
+          grep '"version"' hf-space/package.json
+          
           cd hf-space
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
           git add -A
-          git diff --cached --quiet || git commit -m "deploy from github actions $(date +%Y-%m-%d)"
+          
+          # 检查是否有变化
+          if git diff --cached --quiet; then
+            echo "No changes detected. Creating empty commit to trigger rebuild."
+            git commit --allow-empty -m "deploy: force rebuild $(date +%Y-%m-%d_%H:%M:%S) [skip ci]"
+          else
+            echo "Changes detected:"
+            git diff --cached --stat
+            git commit -m "deploy from github actions $(date +%Y-%m-%d_%H:%M:%S)"
+          fi
 
       - name: 推送到 Hugging Face
         run: |
           cd hf-space
+          echo "=== Last 3 commits ==="
+          git log --oneline -3
           for i in 1 2 3; do
             echo "Attempt $i: pushing to HF..."
-            git push "https://x:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/youqisi/9router" main && break
+            git push --force "https://x:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/youqisi/9router" main && break
             echo "Push failed, retrying in 5s..."
             sleep 5
           done
