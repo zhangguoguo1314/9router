@@ -169,7 +169,27 @@ export default function ProviderDetailPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ providerAlias: providerStorageAlias, ids: [modelId] }),
       });
-      if (res.ok) await fetchDisabledModels();
+      if (res.ok) {
+        await fetchDisabledModels();
+        // 同步从活跃连接的 enabledModels 中移除
+        const activeConn = connections.find(c => c.isActive !== false) || connections[0];
+        if (activeConn?.providerSpecificData?.enabledModels?.includes(modelId)) {
+          try {
+            await fetch(`/api/providers/${activeConn.id}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                providerSpecificData: {
+                  ...activeConn.providerSpecificData,
+                  enabledModels: activeConn.providerSpecificData.enabledModels.filter(id => id !== modelId),
+                },
+              }),
+            });
+          } catch (e) {
+            console.log("Error updating enabledModels:", e);
+          }
+        }
+      }
     } catch (error) {
       console.log("Error disabling model:", error);
     }
@@ -945,19 +965,33 @@ export default function ProviderDetailPage() {
       ...models,
       ...kiloFreeModels.filter((fm) => !models.some((m) => m.id === fm.id)),
     ].filter((m) => { const k = getModelKind(m); return !k || k === "llm"; });
+
+    // 从活跃连接中获取 enabledModels（通过拉取模型添加的模型）
+    const activeConn = connections.find(c => c.isActive !== false) || connections[0];
+    const enabledModels = activeConn?.providerSpecificData?.enabledModels || [];
+
+    // 将 enabledModels 中不在静态列表和自定义模型中的模型添加进来
+    const enabledNotInStatic = enabledModels.filter(
+      em => !allModels.some(m => m.id === em)
+    );
+    const enabledModelObjects = enabledNotInStatic.map(id => ({ id, name: id.split('/').pop() }));
+
+    // 合并到 allModels 中用于显示
+    const allModelsWithEnabled = [...allModels, ...enabledModelObjects];
+
     const disabledSet = new Set(disabledModelIds);
-    const displayModels = allModels.filter((m) => !disabledSet.has(m.id));
-    const disabledDisplayModels = allModels.filter((m) => disabledSet.has(m.id));
+    const displayModels = allModelsWithEnabled.filter((m) => !disabledSet.has(m.id));
+    const disabledDisplayModels = allModelsWithEnabled.filter((m) => disabledSet.has(m.id));
     // Custom models added by user (stored as aliases: modelId → providerAlias/modelId)
     const customModels = Object.entries(modelAliases)
       .filter(([alias, fullModel]) => {
         const prefix = `${providerStorageAlias}/`;
         if (!fullModel.startsWith(prefix)) return false;
         const modelId = fullModel.slice(prefix.length);
-        // Only show if not already in hardcoded list
+        // Only show if not already in hardcoded list or enabledModels
         // For passthroughModels, include all aliases (model IDs may contain slashes like "anthropic/claude-3")
-        if (providerInfo.passthroughModels) return !models.some((m) => m.id === modelId);
-        return !models.some((m) => m.id === modelId) && alias === modelId;
+        if (providerInfo.passthroughModels) return !models.some((m) => m.id === modelId) && !enabledModels.includes(modelId);
+        return !models.some((m) => m.id === modelId) && !enabledModels.includes(modelId) && alias === modelId;
       })
       .map(([alias, fullModel]) => ({
         id: fullModel.slice(`${providerStorageAlias}/`.length),
@@ -966,7 +1000,7 @@ export default function ProviderDetailPage() {
       }));
 
     return (
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-3 overflow-hidden">
         {/* Custom models first */}
         {customModels.map((model) => (
           <ModelRow
