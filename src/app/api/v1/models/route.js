@@ -10,6 +10,7 @@ import { getDisabledModels } from "@/lib/disabledModelsDb";
 import { resolveKiroModels } from "open-sse/services/kiroModels.js";
 import { resolveQoderModels } from "open-sse/services/qoderModels.js";
 import { capabilitiesFromServiceKind } from "open-sse/providers/capabilities.js";
+import { PROVIDERS } from "open-sse/config/providers.js";
 
 // Per-provider live model resolvers. Each receives a connection record and
 // returns { models: [{ id, name? }, ...] } | null on failure.
@@ -102,6 +103,57 @@ async function fetchCompatibleModelIds(connection) {
     headers.Authorization = `Bearer ${connection.apiKey}`;
   } else {
     return [];
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const response = await fetch(url, {
+      method: "GET",
+      headers,
+      cache: "no-store",
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) return [];
+
+    const data = await response.json();
+    const rawModels = parseOpenAIStyleModels(data);
+
+    return Array.from(
+      new Set(
+        rawModels
+          .map((model) => model?.id || model?.name || model?.model)
+          .filter((modelId) => typeof modelId === "string" && modelId.trim() !== "")
+      )
+    );
+  } catch {
+    return [];
+  }
+}
+
+// Fetch live model IDs from providers that expose an OpenAI-compatible /models endpoint
+// but are NOT openai-compatible/anthropic-compatible nodes (e.g. nvidia, together, etc.)
+async function fetchOpenAiStyleModels(connection, providerId) {
+  if (!connection?.apiKey) return [];
+
+  const providerConfig = PROVIDERS[providerId];
+  if (!providerConfig) return [];
+
+  // Use validateUrl if available, otherwise derive from baseUrl
+  let url = providerConfig.validateUrl;
+  if (!url && providerConfig.baseUrl) {
+    url = providerConfig.baseUrl.replace(/\/chat\/completions$/, "/models");
+  }
+  if (!url) return [];
+
+  const headers = {};
+  const authHeader = providerConfig.authHeader || "bearer";
+  if (authHeader === "x-api-key") {
+    headers["x-api-key"] = connection.apiKey;
+  } else {
+    headers.Authorization = `Bearer ${connection.apiKey}`;
   }
 
   try {
@@ -283,6 +335,15 @@ export async function buildModelsList(kindFilter) {
 
       if (isCompatibleProvider && rawModelIds.length === 0 && !UPSTREAM_CONNECTION_RE.test(providerId)) {
         rawModelIds = await fetchCompatibleModelIds(conn);
+      }
+
+      // For standard providers with OpenAI-compatible /models endpoint (e.g. nvidia, together, etc.)
+      // fetch live catalog when static list is empty or stale
+      if (!isCompatibleProvider && !hasExplicitEnabledModels && !UPSTREAM_CONNECTION_RE.test(providerId)) {
+        const liveIds = await fetchOpenAiStyleModels(conn, providerId);
+        if (liveIds.length > 0) {
+          rawModelIds = liveIds;
+        }
       }
 
       // Config-driven live catalog override (e.g. Kiro returns dynamic
