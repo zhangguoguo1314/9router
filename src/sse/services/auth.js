@@ -3,6 +3,7 @@ import { resolveConnectionProxyConfig } from "@/lib/network/connectionProxy";
 import { formatRetryAfter, checkFallbackError, isModelLockActive, buildModelLockUpdate, getEarliestModelLockUntil } from "open-sse/services/accountFallback.js";
 import { MAX_RATE_LIMIT_COOLDOWN_MS } from "open-sse/config/errorConfig.js";
 import { resolveProviderId, FREE_PROVIDERS } from "@/shared/constants/providers.js";
+import { getPinnedConnectionId, pinConnection, unpinConnection } from "./sessionStickiness.js";
 import * as log from "../utils/logger.js";
 
 // Mutex to prevent race conditions during account selection
@@ -21,6 +22,7 @@ export async function getProviderCredentials(provider, excludeConnectionIds = nu
     ? excludeConnectionIds
     : (excludeConnectionIds ? new Set([excludeConnectionIds]) : new Set());
   const preferredConnectionId = options?.preferredConnectionId || null;
+  const apiKey = options?.apiKey || null;
   // Acquire mutex to prevent race conditions
   const currentMutex = selectionMutex;
   let resolveMutex;
@@ -110,6 +112,16 @@ export async function getProviderCredentials(provider, excludeConnectionIds = nu
         log.info("AUTH", `${provider} | pinned to ${connection.id?.slice(0, 8)} (${connection.name || connection.email || "unnamed"})`);
       }
     }
+    // Session stickiness: same API key always uses the same account
+    if (!connection && apiKey) {
+      const pinnedId = getPinnedConnectionId(apiKey, providerId);
+      if (pinnedId && !excludeSet.has(pinnedId)) {
+        connection = availableConnections.find((c) => c.id === pinnedId);
+        if (connection) {
+          log.info("AUTH", `${provider} | session-pinned to ${connection.id?.slice(0, 8)} (${connection.name || connection.email || "unnamed"})`);
+        }
+      }
+    }
     if (connection) {
       // skip strategy
     } else if (strategy === "round-robin") {
@@ -154,6 +166,11 @@ export async function getProviderCredentials(provider, excludeConnectionIds = nu
     } else {
       // Default: fill-first (already sorted by priority in getProviderConnections)
       connection = availableConnections[0];
+    }
+
+    // Pin selected connection to session for future requests
+    if (apiKey && connection) {
+      pinConnection(apiKey, providerId, connection.id);
     }
 
     const resolvedProxy = await resolveConnectionProxyConfig(connection.providerSpecificData || {});
