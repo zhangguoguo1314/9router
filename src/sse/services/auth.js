@@ -112,14 +112,16 @@ export async function getProviderCredentials(provider, excludeConnectionIds = nu
         log.info("AUTH", `${provider} | pinned to ${connection.id?.slice(0, 8)} (${connection.name || connection.email || "unnamed"})`);
       }
     }
-    // Session stickiness: same API key always uses the same account
+    // Smart session stickiness: same API key uses the same account (with auto-rotation)
     if (!connection && apiKey) {
-      const pinnedId = getPinnedConnectionId(apiKey, providerId);
-      if (pinnedId && !excludeSet.has(pinnedId)) {
-        connection = availableConnections.find((c) => c.id === pinnedId);
+      const pinned = getPinnedConnectionId(apiKey, providerId);
+      if (pinned.connectionId && !excludeSet.has(pinned.connectionId)) {
+        connection = availableConnections.find((c) => c.id === pinned.connectionId);
         if (connection) {
           log.info("AUTH", `${provider} | session-pinned to ${connection.id?.slice(0, 8)} (${connection.name || connection.email || "unnamed"})`);
         }
+      } else if (pinned.shouldRotate) {
+        log.info("AUTH", `${provider} | session rotation triggered (limit reached), selecting new account`);
       }
     }
     if (connection) {
