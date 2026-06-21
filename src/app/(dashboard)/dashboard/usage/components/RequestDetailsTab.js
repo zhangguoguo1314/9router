@@ -285,6 +285,11 @@ export default function RequestDetailsTab() {
                      </td>
                     <td className="p-4 text-sm text-text-main text-right font-mono">
                       {getInputTokens(detail.tokens).toLocaleString()}
+                      {(detail.tokens?.cached_tokens || detail.tokens?.cache_read_input_tokens) ? (
+                        <span className="ml-1 text-xs text-green-500" title="缓存命中">
+                          ({detail.tokens?.cached_tokens || detail.tokens?.cache_read_input_tokens} 缓存)
+                        </span>
+                      ) : null}
                     </td>
                     <td className="p-4 text-sm text-text-main text-right font-mono">
                       {detail.tokens?.completion_tokens?.toLocaleString() || 0}

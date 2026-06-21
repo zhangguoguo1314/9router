@@ -129,6 +129,17 @@ export function createSSEStream(options = {}) {
                 }
               }
 
+              // Normalize thinking field: some providers (MiMo, etc.) use delta.thinking
+              // instead of delta.reasoning_content — map to reasoning_content for client compat
+              if (parsed?.choices) {
+                for (const choice of parsed.choices) {
+                  if (choice.delta?.thinking && typeof choice.delta.thinking === "string" && !choice.delta.reasoning_content) {
+                    choice.delta.reasoning_content = choice.delta.thinking;
+                    fieldsInjected = true;
+                  }
+                }
+              }
+
               if (!hasValuableContent(parsed, FORMATS.OPENAI)) {
                 continue;
               }
@@ -238,6 +249,11 @@ export function createSSEStream(options = {}) {
         if (parsed.choices?.[0]?.delta?.reasoning_content) {
           totalContentLength += parsed.choices[0].delta.reasoning_content.length;
           accumulatedThinking += parsed.choices[0].delta.reasoning_content;
+        }
+        // OpenAI format - thinking (some providers like MiMo use this instead of reasoning_content)
+        if (parsed.choices?.[0]?.delta?.thinking && typeof parsed.choices[0].delta.thinking === "string") {
+          totalContentLength += parsed.choices[0].delta.thinking.length;
+          accumulatedThinking += parsed.choices[0].delta.thinking;
         }
         
         // Gemini format

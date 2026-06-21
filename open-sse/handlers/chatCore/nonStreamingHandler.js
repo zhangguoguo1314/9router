@@ -198,7 +198,17 @@ export async function handleNonStreamingResponse({ providerResponse, provider, m
     translatedResponse.usage = filterUsageForFormat(addBufferToUsage(translatedResponse.usage), sourceFormat);
   }
 
-  // Strip reasoning_content only when content is non-empty.
+  // Normalize thinking field: some providers (MiMo, etc.) return thinking in message.thinking
+  // instead of message.reasoning_content — map for client compatibility
+  if (translatedResponse?.choices) {
+    for (const choice of translatedResponse.choices) {
+      if (choice?.message?.thinking && typeof choice.message.thinking === "string" && !choice.message.reasoning_content) {
+        choice.message.reasoning_content = choice.message.thinking;
+      }
+    }
+  }
+
+  // Strip reasoning_content only when content is non-empty AND reasoning is short.
   // When content is empty (e.g. thinking models that used all tokens for reasoning),
   // reasoning_content is the only useful output and must be preserved.
   if (translatedResponse?.choices) {
