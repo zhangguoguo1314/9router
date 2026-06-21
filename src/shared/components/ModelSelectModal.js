@@ -182,6 +182,17 @@ export default function ModelSelectModal({
             value: fullModel,
           }));
 
+        // Include enabledModels from fetched models (via "拉取模型" feature)
+        const connection = activeProviders.find(p => p.provider === providerId);
+        const enabledModels = connection?.providerSpecificData?.enabledModels || [];
+        const enabledModelEntries = enabledModels
+          .filter((modelId) => typeof modelId === "string" && modelId.trim() !== "")
+          .map((modelId) => ({
+            id: modelId,
+            name: modelId.split('/').pop() || modelId,
+            value: `${alias}/${modelId}`,
+          }));
+
         // For typed kinds, only include hardcoded typed models (aliases are typically LLM-only and lack type info)
         let combined = aliasModels;
         if (kindFilter && TYPED_KINDS.has(kindFilter)) {
@@ -194,13 +205,14 @@ export default function ModelSelectModal({
             if (supports) combined = [{ id: providerId, name: providerInfo.name, value: alias }];
           }
         } else {
-          // LLM/null kind: merge hardcoded models (e.g. mimo-free → mimo-auto) with aliases
+          // LLM/null kind: merge hardcoded models (e.g. mimo-free → mimo-auto) with aliases and enabledModels
           const seen = new Set(aliasModels.map((m) => m.value));
+          enabledModelEntries.forEach((m) => seen.add(m.value));
           const hardcoded = getModelsByProviderId(providerId)
             .filter((m) => !getModelKind(m) || getModelKind(m) === "llm")
             .map((m) => ({ id: m.id, name: m.name, value: `${alias}/${m.id}`, kind: getModelKind(m) }))
             .filter((m) => !seen.has(m.value));
-          combined = [...aliasModels, ...hardcoded];
+          combined = [...aliasModels, ...enabledModelEntries, ...hardcoded];
         }
 
         if (combined.length > 0) {

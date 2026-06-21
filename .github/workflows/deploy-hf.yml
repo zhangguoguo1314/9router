@@ -50,13 +50,17 @@ jobs:
 
       - name: 复制文件到 HF Space
         run: |
-          echo "=== Current package.json version ==="
+          echo "=== GitHub package.json version ==="
           grep '"version"' package.json
           echo "=== HF Space package.json version (before) ==="
           grep '"version"' hf-space/package.json || echo "No package.json in HF Space"
           
+          # Remove old files to ensure clean state
+          rm -rf hf-space/src hf-space/open-sse hf-space/public hf-space/cli hf-space/scripts hf-space/skills
+          
           cp Dockerfile.hf hf-space/Dockerfile
           cp package.json hf-space/
+          cp package-lock.json hf-space/ 2>/dev/null || true
           cp next.config.mjs hf-space/
           cp jsconfig.json hf-space/
           cp custom-server.js hf-space/
@@ -74,9 +78,11 @@ jobs:
           cd hf-space
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-          git add -A
           
-          # 检查是否有变化
+          # Always add all files to ensure changes are detected
+          git add -A --force
+          
+          # Check if there are changes
           if git diff --cached --quiet; then
             echo "No changes detected. Creating empty commit to trigger rebuild."
             git commit --allow-empty -m "deploy: force rebuild $(date +%Y-%m-%d_%H:%M:%S) [skip ci]"
@@ -91,9 +97,12 @@ jobs:
           cd hf-space
           echo "=== Last 3 commits ==="
           git log --oneline -3
+          echo "=== Git status ==="
+          git status
           for i in 1 2 3; do
             echo "Attempt $i: pushing to HF..."
             git push --force "https://x:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/youqisi/9router" main && break
             echo "Push failed, retrying in 5s..."
             sleep 5
           done
+          echo "=== Push completed ==="
