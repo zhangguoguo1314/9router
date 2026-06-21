@@ -1,6 +1,6 @@
 # Dockerfile for 9Router - HF Spaces 版本
 # 基于 original Dockerfile，适配 HF Spaces 环境（端口 7860）
-# Build timestamp: 2026-06-21-force-rebuild-v1
+# Build timestamp: 2026-06-21-force-rebuild-v2
 ARG NODE_IMAGE=node:22-alpine
 FROM ${NODE_IMAGE} AS base
 WORKDIR /app
