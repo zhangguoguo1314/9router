@@ -22,8 +22,11 @@ const sessionStore = new Map();
 const SESSION_TTL_MS = 60 * 60 * 1000;
 
 // Default limits for smart rotation
-const DEFAULT_MAX_REQUESTS = 20;    // Max consecutive requests per account
-const DEFAULT_MAX_DURATION_MS = 30 * 60 * 1000; // 30 minutes per account
+// High limits to protect accounts while maintaining context:
+// - 100 requests = enough for a long coding session
+// - 120 minutes = 2 hours before rotating
+const DEFAULT_MAX_REQUESTS = 100;
+const DEFAULT_MAX_DURATION_MS = 120 * 60 * 1000;
 
 // Cleanup interval
 let cleanupInterval = null;

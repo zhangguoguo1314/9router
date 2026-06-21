@@ -349,6 +349,25 @@ export function createSSEStream(options = {}) {
             usage = estimateUsage(body, totalContentLength, FORMATS.OPENAI);
           }
 
+          // Empty response protection: if provider returned no content at all,
+          // inject a synthetic chunk so clients don't hang or error out.
+          // This can happen with MiMo proxy buffering or thinking-only models.
+          if (totalContentLength === 0 && !accumulatedThinking) {
+            const syntheticChunk = {
+              id: "chatcmpl-synthetic",
+              object: "chat.completion.chunk",
+              created: Math.floor(Date.now() / 1000),
+              choices: [{
+                index: 0,
+                delta: { role: "assistant", content: "" },
+                finish_reason: "stop"
+              }]
+            };
+            const syntheticOutput = `data: ${JSON.stringify(syntheticChunk)}\n\n`;
+            reqLogger?.appendConvertedChunk?.(syntheticOutput);
+            controller.enqueue(sharedEncoder.encode(syntheticOutput));
+          }
+
           if (hasValidUsage(usage)) {
             logUsage(provider, usage, model, connectionId, apiKey);
           } else {
