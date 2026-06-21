@@ -106,3 +106,31 @@ jobs:
             sleep 5
           done
           echo "=== Push completed ==="
+
+      - name: 检查 HF Space 构建状态
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          echo "Checking HF Space status..."
+          curl -s -H "Authorization: Bearer $HF_TOKEN" "https://huggingface.co/api/spaces/youqisi/9router" | python3 -c "
+import sys, json
+try:
+    d = json.load(sys.stdin)
+    print('Space ID:', d.get('id'))
+    print('Runtime stage:', d.get('runtime', {}).get('stage', 'unknown'))
+    print('Last modified:', d.get('lastModified', 'unknown'))
+    print('SDK:', d.get('sdk', 'unknown'))
+except Exception as e:
+    print('Error parsing:', e)
+    print(sys.stdin.read()[:500])
+" 2>&1 || echo "Failed to check HF Space status"
+
+      - name: 触发 HF Space 重建
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          echo "Triggering HF Space rebuild..."
+          curl -s -X POST -H "Authorization: Bearer $HF_TOKEN" \
+            "https://huggingface.co/api/spaces/youqisi/9router/restart" \
+            -H "Content-Type: application/json" -d '{}' 2>&1 || echo "Restart API failed (may not be supported)"
+          echo "Done"
