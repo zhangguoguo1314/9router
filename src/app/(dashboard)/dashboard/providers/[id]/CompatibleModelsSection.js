@@ -71,7 +71,7 @@ function CompatibleModelRow({ modelId, fullModel, copied, onCopy, onDeleteAlias,
   );
 }
 
-export default function CompatibleModelsSection({ providerStorageAlias, providerDisplayAlias, modelAliases, copied, onCopy, onSetAlias, onDeleteAlias, connections, isAnthropic, providerId }) {
+export default function CompatibleModelsSection({ providerStorageAlias, providerDisplayAlias, modelAliases, copied, onCopy, onSetAlias, onDeleteAlias, connections, isAnthropic, providerId, onFetchAliases }) {
   const [newModel, setNewModel] = useState("");
   const [adding, setAdding] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -259,8 +259,7 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
         isCompatible={true}
         onSave={async (result) => {
           if (result.success) {
-            // Trigger refresh of aliases via onSetAlias callback pattern
-            // The parent page will handle refreshing via fetchAliases
+            onFetchAliases?.();
           }
         }}
       />
@@ -282,4 +281,5 @@ CompatibleModelsSection.propTypes = {
   })).isRequired,
   isAnthropic: PropTypes.bool,
   providerId: PropTypes.string,
+  onFetchAliases: PropTypes.func,
 };

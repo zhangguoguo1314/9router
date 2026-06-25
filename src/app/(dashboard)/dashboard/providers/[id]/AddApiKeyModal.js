@@ -222,10 +222,15 @@ export default function AddApiKeyModal({ isOpen, provider, providerName, isCompa
               placeholder={credentialPlaceholder}
               className="flex-1"
             />
-            <div className="pt-6">
+            <div className="pt-6 flex items-center gap-2">
               <Button onClick={handleValidate} disabled={!formData.apiKey || validating || saving} variant="secondary">
                 {validating ? "Checking..." : "Check"}
               </Button>
+              {validationResult && (
+                <Badge variant={validationResult === "success" ? "success" : "error"}>
+                  {validationResult === "success" ? "Valid" : "Invalid"}
+                </Badge>
+              )}
             </div>
           </div>
         )}
@@ -267,11 +272,6 @@ export default function AddApiKeyModal({ isOpen, provider, providerName, isCompa
           <p className="text-xs text-text-muted">
             Leave blank to use <code>http://localhost:11434</code>. For remote Ollama, enter the full host URL (e.g. <code>http://192.168.1.10:11434</code>).
           </p>
-        )}
-        {validationResult && (
-          <Badge variant={validationResult === "success" ? "success" : "error"}>
-            {validationResult === "success" ? "Valid" : "Invalid"}
-          </Badge>
         )}
         {error && (
           <p className="text-xs text-red-500 break-words">{error}</p>

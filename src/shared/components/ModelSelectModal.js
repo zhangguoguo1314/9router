@@ -287,10 +287,18 @@ export default function ModelSelectModal({
           .filter((m) => m.providerAlias === alias && !hardcodedIds.has(m.id) && !customAliasIds.has(m.id))
           .map((m) => ({ id: m.id, name: m.name || m.id, value: `${alias}/${m.id}`, isCustom: true }));
 
+        // Enabled models from "Fetch Models" / Import from /models (stored in connection.enabledModels)
+        const connection = activeProviders.find((p) => p.provider === providerId);
+        const enabledModels = connection?.providerSpecificData?.enabledModels || [];
+        const enabledModelEntries = enabledModels
+          .filter((modelId) => !hardcodedIds.has(modelId) && !customAliasIds.has(modelId))
+          .map((modelId) => ({ id: modelId, name: modelId, value: `${alias}/${modelId}`, isCustom: true }));
+
         const merged = [
           ...hardcodedModels.map((m) => ({ id: m.id, name: m.name, value: `${alias}/${m.id}`, kind: getModelKind(m) })),
           ...customAliasModels,
           ...customRegisteredModels,
+          ...enabledModelEntries,
         ];
         // Dedupe by value (alias may equal hardcoded id, causing React key collision)
         const seen = new Set();
