@@ -3,24 +3,7 @@ import { getProviderConnectionById, updateProviderConnection } from "@/models";
 import { getModelAliases, setModelAlias } from "@/models";
 import { isOpenAICompatibleProvider, isAnthropicCompatibleProvider } from "@/shared/constants/providers";
 import { getProviderAlias } from "@/shared/constants/providers";
-
-/**
- * Helper: fetch remote model list by delegating to the existing /models endpoint logic.
- * We import and reuse the same handler by making an internal fetch.
- */
-async function fetchRemoteModels(connectionId) {
-  // Use absolute URL with protocol and host from request headers
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.BASE_URL || "https://youqisi-9router.hf.space";
-  const url = baseUrl.startsWith("http") ? `${baseUrl}/api/providers/${connectionId}/models` : `https://${baseUrl}/api/providers/${connectionId}/models`;
-  const res = await fetch(url, {
-    cache: "no-store",
-  });
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    throw new Error(data.error || `Failed to fetch models (${res.status})`);
-  }
-  return res.json();
-}
+import { getProviderModels } from "../models/route";
 
 /**
  * GET /api/providers/[id]/fetch-models
@@ -35,7 +18,10 @@ export async function GET(request, { params }) {
       return NextResponse.json({ error: "Connection not found" }, { status: 404 });
     }
 
-    const data = await fetchRemoteModels(id);
+    const data = await getProviderModels(connection);
+    if (data.error) {
+      return NextResponse.json({ error: data.error }, { status: data.status || 500 });
+    }
     const remoteModels = data.models || [];
 
     // Determine existing enabled models
